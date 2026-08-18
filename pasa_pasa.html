@@ -2,81 +2,234 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Pasa Pasa</title>
 <style>
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#bfe9ff}
+  :root{
+    --sky-top:#8fdcff; --sky-bottom:#bdeeff;
+    --sand:#e7c98e; --sand-edge:#d9b877;
+    --sea1:#2fb6e0; --sea2:#1a8fc0;
+    --ink:#3c190b; --paper:#fffaf0;
+    --purple:#6c4bd9; --purple-dark:#5637b8;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;
+    font-family:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif;background:#bfe9ff}
   body{display:flex;justify-content:center;align-items:center}
+
   #game{
     position:relative;width:min(100vw,480px);height:100vh;max-height:900px;overflow:hidden;
-    background:linear-gradient(#8fdcff 0 57%,#7dcc69 57% 100%);
+    background:linear-gradient(#dff6ff 0%, var(--sky-top) 40%, var(--sky-top) 57%, var(--sea1) 57%, var(--sea2) 100%);
     touch-action:none;
+    outline:none;
   }
-  .sun{position:absolute;width:72px;height:72px;border-radius:50%;background:#ffe47a;right:28px;top:35px;box-shadow:0 0 25px #fff3a8}
-  .cloud{position:absolute;background:#fff;border-radius:40px;opacity:.9}
-  .c1{width:105px;height:32px;left:20px;top:85px}.c1:before{content:"";position:absolute;width:45px;height:45px;background:#fff;border-radius:50%;left:20px;top:-22px}.c1:after{content:"";position:absolute;width:55px;height:55px;background:#fff;border-radius:50%;left:52px;top:-30px}
-  .c2{width:85px;height:27px;right:35px;top:155px}.c2:before{content:"";position:absolute;width:40px;height:40px;background:#fff;border-radius:50%;left:12px;top:-20px}.c2:after{content:"";position:absolute;width:42px;height:42px;background:#fff;border-radius:50%;left:43px;top:-23px}
-  .path{position:absolute;left:0;right:0;bottom:0;height:43%;background:#e7c98e;clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);opacity:.95}
-  .house{position:absolute;right:12%;top:30%;width:180px;height:150px}
-  .roof{position:absolute;left:-15px;top:0;width:210px;height:90px;background:#c85b4b;clip-path:polygon(50% 0,100% 100%,0 100%)}
-  .wall{position:absolute;left:15px;top:58px;width:150px;height:92px;background:#fff2c9;border:4px solid #b85c45;border-radius:5px}
-  .door{position:absolute;left:58px;bottom:0;width:50px;height:68px;background:#8c5a43;border:4px solid #69412f;border-radius:6px 6px 0 0}
-  .knob{position:absolute;right:7px;top:34px;width:7px;height:7px;background:#f6d36d;border-radius:50%}
-  .window{position:absolute;right:15px;top:75px;width:37px;height:37px;background:#8dd7ee;border:4px solid #8a5a45}
+
+  /* ---------- Sky dressing ---------- */
+  .sun{position:absolute;width:74px;height:74px;border-radius:50%;right:26px;top:34px;
+    background:radial-gradient(circle at 35% 30%,#fff7d6,#ffe47a 55%,#ffce54 100%);
+    box-shadow:0 0 40px 6px rgba(255,229,130,.65);
+    animation:pulse 4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+  .bird{position:absolute;width:20px;height:8px;opacity:.75;animation:fly 14s linear infinite}
+  .bird:before,.bird:after{content:"";position:absolute;top:0;width:11px;height:8px;border-top:2px solid #375;border-radius:50% 50% 0 0}
+  .bird:before{left:0;transform:rotate(15deg);border-color:#3a2a20}
+  .bird:after{right:0;transform:rotate(-15deg) scaleX(-1);border-color:#3a2a20}
+  .b1{top:70px;left:-30px;animation-delay:0s}
+  .b2{top:100px;left:-60px;animation-delay:5s;transform:scale(.8)}
+  @keyframes fly{0%{transform:translateX(0)}100%{transform:translateX(560px)}}
+
+  .cloud{position:absolute;background:#fff;border-radius:40px;opacity:.92;animation:drift 40s linear infinite}
+  .c1{width:105px;height:32px;left:-120px;top:85px}
+  .c1:before{content:"";position:absolute;width:45px;height:45px;background:#fff;border-radius:50%;left:20px;top:-22px}
+  .c1:after{content:"";position:absolute;width:55px;height:55px;background:#fff;border-radius:50%;left:52px;top:-30px}
+  .c2{width:85px;height:27px;left:-90px;top:150px;animation-duration:55s;animation-delay:-20s}
+  .c2:before{content:"";position:absolute;width:40px;height:40px;background:#fff;border-radius:50%;left:12px;top:-20px}
+  .c2:after{content:"";position:absolute;width:42px;height:42px;background:#fff;border-radius:50%;left:43px;top:-23px}
+  @keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(640px)}}
+
+  .palm{position:absolute;left:4%;bottom:42%;width:70px;height:150px;z-index:2}
+  .trunk{position:absolute;left:28px;bottom:0;width:12px;height:110px;background:linear-gradient(#8a6238,#6b4826);border-radius:3px;
+    clip-path:polygon(20% 100%,35% 0,65% 0,80% 100%)}
+  .frond{position:absolute;left:34px;bottom:100px;width:46px;height:14px;background:#3f9142;border-radius:0 60% 60% 0;transform-origin:0 50%}
+  .f1{transform:rotate(-35deg)}.f2{transform:rotate(-8deg)}.f3{transform:rotate(18deg)}.f4{transform:rotate(45deg)}.f5{transform:rotate(70deg)}
+
+  /* ---------- Beach & sea ---------- */
+  .path{position:absolute;left:0;right:0;bottom:0;height:43%;background:var(--sand);
+    clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);}
+  .path:after{content:"";position:absolute;inset:0;background:
+    radial-gradient(ellipse 90px 14px at 20% 70%, rgba(255,255,255,.35), transparent 70%),
+    radial-gradient(ellipse 70px 10px at 70% 50%, rgba(255,255,255,.3), transparent 70%),
+    radial-gradient(ellipse 60px 10px at 45% 88%, rgba(217,184,119,.4), transparent 70%);
+  }
+  .seafoam{position:absolute;left:0;right:0;height:14px;background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.85) 0 22px, transparent 22px 44px);
+    opacity:.8;border-radius:50%;animation:foamMove 3.2s ease-in-out infinite;}
+  .sf1{top:56.5%}.sf2{top:53%;opacity:.5;animation-delay:-1.6s}
+  @keyframes foamMove{0%,100%{transform:translateX(0) scaleY(1)}50%{transform:translateX(14px) scaleY(1.3)}}
+
+  .shell{position:absolute;width:14px;height:10px;background:#f3c9a3;border-radius:50% 50% 40% 40%;opacity:.85;z-index:1}
+  .sh1{left:12%;bottom:8%;transform:rotate(-15deg)}
+  .sh2{left:60%;bottom:5%;transform:rotate(20deg);width:10px;height:8px}
+
+  /* ---------- House ---------- */
+  .house{position:absolute;right:10%;top:29%;width:180px;height:150px;z-index:3;
+    filter:drop-shadow(0 8px 6px rgba(0,0,0,.15))}
+  .roof{position:absolute;left:-15px;top:0;width:210px;height:90px;background:linear-gradient(#d8695a,#b6473a);
+    clip-path:polygon(50% 0,100% 100%,0 100%)}
+  .roofRidge{position:absolute;left:35px;top:-4px;width:110px;height:10px;background:#a3392d;border-radius:6px;
+    clip-path:polygon(50% 0,100% 100%,0 100%)}
+  .wall{position:absolute;left:15px;top:58px;width:150px;height:92px;background:linear-gradient(#fff8e0,#fce9b8);
+    border:4px solid #b85c45;border-radius:5px}
+  .door{position:absolute;left:58px;bottom:0;width:50px;height:68px;background:linear-gradient(#9c6a50,#7a4b36);
+    border:4px solid #69412f;border-radius:6px 6px 0 0;transition:filter .3s}
+  .door.glow{filter:drop-shadow(0 0 10px #ffe47a) brightness(1.15)}
+  .knob{position:absolute;right:7px;top:34px;width:7px;height:7px;background:#f6d36d;border-radius:50%;box-shadow:0 0 4px #f6d36d}
+  .window{position:absolute;right:15px;top:75px;width:37px;height:37px;background:radial-gradient(circle at 35% 30%,#c8f0fb,#8dd7ee);border:4px solid #8a5a45}
   .window:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px solid #8a5a45}
   .window:before{content:"";position:absolute;top:50%;left:0;right:0;border-top:3px solid #8a5a45}
-  #raisin{
-    position:absolute;left:10%;bottom:24%;width:66px;height:76px;cursor:pointer;
-    transition:transform .08s linear;
-    filter:drop-shadow(0 7px 4px rgba(0,0,0,.2));
-    z-index:5;
-  }
-  .body{position:absolute;inset:4px 5px 2px;border-radius:47% 52% 45% 48%;background:radial-gradient(circle at 35% 25%,#8d4a20,#5a260f 62%,#38170a);border:3px solid #3c190b}
+  .flowerbox{position:absolute;left:52px;bottom:64px;width:58px;height:10px;background:#8a5a45;border-radius:2px}
+  .flower{position:absolute;bottom:8px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 2px #fff}
+  .fl1{left:4px;background:#e8637a}.fl2{left:22px;background:#f6c34a}.fl3{left:40px;background:#e8637a}
+
+  /* ---------- Raisin (player) ---------- */
+  #raisinWrap{position:absolute;left:8%;bottom:22%;width:70px;height:96px;z-index:5;cursor:grab;touch-action:none;}
+  #raisinWrap:active{cursor:grabbing}
+  #raisinWrap:focus-visible #raisin{outline:3px solid #fff;outline-offset:3px;border-radius:50%}
+  .shadow{position:absolute;bottom:-2px;left:50%;width:52px;height:12px;background:radial-gradient(ellipse,rgba(0,0,0,.32),transparent 70%);
+    transform:translateX(-50%);transition:width .12s,opacity .12s}
+  #raisin{position:absolute;left:2px;bottom:14px;width:66px;height:76px;transition:transform .08s linear}
+  .body{position:absolute;inset:4px 5px 2px;border-radius:47% 52% 45% 48%;
+    background:radial-gradient(circle at 35% 25%,#9a5726,#5a260f 62%,#38170a);border:3px solid #3c190b;
+    box-shadow:inset -6px -8px 10px rgba(0,0,0,.35), inset 5px 6px 8px rgba(255,180,120,.25)}
   .eye{position:absolute;top:28px;width:9px;height:12px;border-radius:50%;background:#17100d;z-index:2}
+  .eye:after{content:"";position:absolute;top:1px;left:2px;width:2.5px;height:3px;background:#fff;border-radius:50%;opacity:.9}
   .e1{left:21px}.e2{right:20px}
-  .mouth{position:absolute;left:26px;top:45px;width:16px;height:8px;border-bottom:3px solid #1b0e08;border-radius:0 0 50% 50%;z-index:2}
-  .leaf{position:absolute;left:27px;top:0;width:25px;height:12px;background:#4b9a4b;border-radius:100% 0 100% 0;transform:rotate(-20deg);z-index:3}
+  .mouth{position:absolute;left:24px;top:44px;width:18px;height:10px;border-bottom:3px solid #1b0e08;border-radius:0 0 50% 50%;z-index:2}
+  .cheek{position:absolute;top:38px;width:7px;height:5px;border-radius:50%;background:#c9694a;opacity:.55;z-index:1}
+  .ch1{left:13px}.ch2{right:13px}
+  .leaf{position:absolute;left:27px;top:0;width:25px;height:12px;background:linear-gradient(#5cb05c,#3f8a3f);border-radius:100% 0 100% 0;transform:rotate(-20deg);transform-origin:0 100%;z-index:3;animation:leafWiggle 2.6s ease-in-out infinite}
+  @keyframes leafWiggle{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(-8deg)}}
   .leg{position:absolute;bottom:-10px;width:5px;height:13px;background:#3b2115;border-radius:5px}.l1{left:20px}.l2{right:19px}
-  .arm{position:absolute;top:42px;width:18px;height:5px;background:#3b2115;border-radius:5px}.a1{left:-12px;transform:rotate(25deg)}.a2{right:-12px;transform:rotate(-25deg)}
-  #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;background:rgba(255,255,255,.86);padding:10px 16px;border-radius:22px;font-weight:700;color:#4c3425;z-index:10;white-space:nowrap;box-shadow:0 3px 10px #0002}
-  #dialogue{position:absolute;left:7%;right:7%;bottom:8%;display:none;z-index:20;background:#fff;border:4px solid #503527;border-radius:22px;padding:14px 16px;box-shadow:0 8px 25px #0003;min-height:100px}
-  #dialogue .name{font-weight:900;font-size:14px;color:#6b3d27;margin-bottom:4px}
-  #text{font-size:20px;font-weight:800;color:#2f241e}
-  #next{position:absolute;right:12px;bottom:10px;border:0;background:#6c4bd9;color:#fff;border-radius:15px;padding:8px 13px;font-weight:800}
-  #wave{position:absolute;right:18%;bottom:31%;width:95px;height:88px;display:none;z-index:15;filter:drop-shadow(0 7px 4px #0002)}
-  .wavebody{position:absolute;inset:8px 0 0;background:#35bde8;border:4px solid #166c9c;border-radius:55% 48% 45% 45%;overflow:hidden}
+  .arm{position:absolute;top:42px;width:18px;height:5px;background:#3b2115;border-radius:5px}
+  .a1{left:-12px;transform:rotate(25deg)}.a2{right:-12px;transform:rotate(-25deg)}
+
+  #raisinWrap.walking .l1{animation:step 0.35s ease-in-out infinite}
+  #raisinWrap.walking .l2{animation:step 0.35s ease-in-out infinite reverse}
+  #raisinWrap.walking .a1{animation:swing 0.35s ease-in-out infinite reverse}
+  #raisinWrap.walking .a2{animation:swing 0.35s ease-in-out infinite}
+  @keyframes step{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(22deg) translateY(-2px)}}
+  @keyframes swing{0%,100%{transform:rotate(25deg)}50%{transform:rotate(45deg)}}
+
+  #raisinWrap.lifted #raisin{transform:scale(1.12) rotate(-4deg)}
+  #raisinWrap.lifted .shadow{width:34px;opacity:.5}
+
+  /* ---------- Wave (NPC) ---------- */
+  #wave{position:absolute;right:16%;bottom:29%;width:98px;height:90px;display:none;z-index:15;
+    filter:drop-shadow(0 7px 5px rgba(0,0,0,.18))}
+  #wave.enter{animation:waveIn .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes waveIn{0%{transform:translateY(40px) scale(.6);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+  .wavebody{position:absolute;inset:8px 0 0;background:linear-gradient(#4fd0f5,#1c86ba);border:4px solid #166c9c;
+    border-radius:55% 48% 45% 45%;overflow:hidden;box-shadow:inset -6px -6px 10px rgba(0,0,0,.2)}
   .foam{position:absolute;top:-4px;left:-5px;width:105px;height:28px;background:#fff;border-radius:50%;transform:rotate(-4deg)}
   .we1,.we2{position:absolute;top:36px;width:8px;height:12px;border-radius:50%;background:#123b53}.we1{left:28px}.we2{right:27px}
   .wmouth{position:absolute;left:39px;top:50px;width:18px;height:10px;border-bottom:3px solid #123b53;border-radius:0 0 50% 50%}
-  #restart{display:none;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:30;border:0;border-radius:18px;background:#fff;padding:14px 20px;font-size:18px;font-weight:900;box-shadow:0 8px 25px #0003}
+  .wcheek{position:absolute;top:44px;width:7px;height:5px;border-radius:50%;background:#0d5a7d;opacity:.5}
+  .wc1{left:20px}.wc2{right:20px}
+
+  #wave.talk .wavebody{animation:bob 0.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+  /* ---------- Dialogue ---------- */
+  #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;background:rgba(255,255,255,.9);
+    padding:10px 16px;border-radius:22px;font-weight:700;color:#4c3425;z-index:10;white-space:nowrap;
+    box-shadow:0 3px 10px rgba(0,0,0,.15);animation:hintFloat 1.6s ease-in-out infinite}
+  @keyframes hintFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+
+  #dialogue{position:absolute;left:6%;right:6%;bottom:8%;display:none;z-index:20;background:var(--paper);
+    border:4px solid #503527;border-radius:22px;padding:16px 18px 14px;box-shadow:0 10px 28px rgba(0,0,0,.22);min-height:104px}
+  #dialogue.show{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes popIn{0%{transform:scale(.85) translateY(10px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+  #dialogue:after{content:"";position:absolute;left:26px;bottom:-14px;width:0;height:0;
+    border:14px solid transparent;border-top-color:#503527;border-bottom:0}
+  #dialogue:before{content:"";position:absolute;left:29px;bottom:-8px;width:0;height:0;
+    border:11px solid transparent;border-top-color:var(--paper);border-bottom:0;z-index:1}
+  #name{font-weight:900;font-size:13px;color:#6b3d27;margin-bottom:5px;letter-spacing:.4px}
+  #text{font-size:21px;font-weight:800;color:#2f241e;line-height:1.25;min-height:28px}
+  #next{position:absolute;right:12px;bottom:10px;border:0;background:var(--purple);color:#fff;border-radius:15px;
+    padding:9px 15px;font-weight:800;font-size:15px;box-shadow:0 3px 0 var(--purple-dark);transition:transform .08s}
+  #next:active{transform:translateY(2px);box-shadow:0 1px 0 var(--purple-dark)}
+
+  #soundToggle{position:absolute;top:10px;left:10px;z-index:25;width:38px;height:38px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);font-size:17px;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+
+  #restart{display:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:30;
+    border:0;border-radius:18px;background:#fff;padding:15px 22px;font-size:18px;font-weight:900;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);color:#3c190b}
+  #restart.show{animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
+
+  .confetti{position:absolute;top:-12px;width:9px;height:9px;border-radius:2px;z-index:28;
+    animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(var(--fallDist)) rotate(var(--rot));opacity:0}}
+
   .success{animation:bounce .5s ease}
   @keyframes bounce{50%{transform:scale(1.12)}}
-  @media(min-height:850px){#raisin{bottom:22%}.house{top:31%}}
+
+  @media(min-height:850px){#raisinWrap{bottom:20%}.house{top:31%}}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important}
+  }
 </style>
 </head>
 <body>
-<div id="game">
-  <div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div>
+<div id="game" tabindex="-1">
+  <button id="soundToggle" aria-label="Silenciar sonido" title="Sonido">🔊</button>
+
+  <div class="sun"></div>
+  <div class="bird b1"></div><div class="bird b2"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div>
+
+  <div class="palm">
+    <div class="trunk"></div>
+    <div class="frond f1"></div><div class="frond f2"></div><div class="frond f3"></div>
+    <div class="frond f4"></div><div class="frond f5"></div>
+  </div>
+
+  <div class="seafoam sf1"></div><div class="seafoam sf2"></div>
+
   <div class="path"></div>
+  <div class="shell sh1"></div><div class="shell sh2"></div>
+
   <div class="house" id="house">
-    <div class="roof"></div><div class="wall"></div><div class="window"></div>
+    <div class="roof"></div><div class="roofRidge"></div><div class="wall"></div>
+    <div class="flowerbox"></div><div class="flower fl1"></div><div class="flower fl2"></div><div class="flower fl3"></div>
+    <div class="window"></div>
     <div class="door" id="door"><div class="knob"></div></div>
   </div>
 
-  <div id="raisin" aria-label="pasa">
-    <div class="leaf"></div><div class="body"></div>
-    <div class="eye e1"></div><div class="eye e2"></div><div class="mouth"></div>
-    <div class="arm a1"></div><div class="arm a2"></div><div class="leg l1"></div><div class="leg l2"></div>
+  <div id="raisinWrap" role="button" tabindex="0" aria-label="Pasa. Arrástrala o usa las flechas del teclado para llegar a la puerta.">
+    <div class="shadow"></div>
+    <div id="raisin">
+      <div class="leaf"></div><div class="body"></div>
+      <div class="eye e1"></div><div class="eye e2"></div>
+      <div class="cheek ch1"></div><div class="cheek ch2"></div>
+      <div class="mouth"></div>
+      <div class="arm a1"></div><div class="arm a2"></div><div class="leg l1"></div><div class="leg l2"></div>
+    </div>
   </div>
 
   <div id="wave">
-    <div class="wavebody"><div class="foam"></div><div class="we1"></div><div class="we2"></div><div class="wmouth"></div></div>
+    <div class="wavebody">
+      <div class="foam"></div><div class="we1"></div><div class="we2"></div>
+      <div class="wcheek wc1"></div><div class="wcheek wc2"></div>
+      <div class="wmouth"></div>
+    </div>
   </div>
 
   <div id="hint">👆 Arrastra la pasa hasta la puerta</div>
 
-  <div id="dialogue">
+  <div id="dialogue" role="status" aria-live="polite">
     <div class="name" id="name">OLA 🌊</div>
     <div id="text">¡Ola, ola!</div>
     <button id="next">Siguiente →</button>
@@ -86,66 +239,223 @@
 </div>
 
 <script>
-const raisin=document.getElementById('raisin');
-const house=document.getElementById('house');
-const door=document.getElementById('door');
-const wave=document.getElementById('wave');
-const hint=document.getElementById('hint');
-const dialogue=document.getElementById('dialogue');
-const nameEl=document.getElementById('name');
-const text=document.getElementById('text');
-const next=document.getElementById('next');
-const restart=document.getElementById('restart');
-let dragging=false, done=false, step=0, offsetX=0, offsetY=0;
+(() => {
+  'use strict';
 
-function posFromEvent(e){
-  const r=document.getElementById('game').getBoundingClientRect();
-  const p=e.touches ? e.touches[0] : e;
-  return {x:p.clientX-r.left,y:p.clientY-r.top};
-}
-function move(e){
-  if(!dragging || done)return;
-  e.preventDefault();
-  const p=posFromEvent(e);
-  const g=document.getElementById('game').getBoundingClientRect();
-  let x=p.x-offsetX, y=p.y-offsetY;
-  x=Math.max(5,Math.min(g.width-71,x)); y=Math.max(10,Math.min(g.height-85,y));
-  raisin.style.left=x+'px'; raisin.style.top=y+'px'; raisin.style.bottom='auto';
-  const a=raisin.getBoundingClientRect(), d=door.getBoundingClientRect();
-  const cx=a.left+a.width/2, cy=a.top+a.height/2;
-  if(cx>d.left-15 && cx<d.right+15 && cy>d.top-35 && cy<d.bottom+35) arrive();
-}
-function start(e){
-  if(done)return;
-  const r=raisin.getBoundingClientRect();
-  const p=e.touches?e.touches[0]:e;
-  offsetX=p.clientX-r.left; offsetY=p.clientY-r.top;
-  dragging=true;
-}
-function end(){dragging=false}
-raisin.addEventListener('touchstart',start,{passive:false});
-raisin.addEventListener('mousedown',start);
-window.addEventListener('touchmove',move,{passive:false});
-window.addEventListener('mousemove',move);
-window.addEventListener('touchend',end);
-window.addEventListener('mouseup',end);
+  const game      = document.getElementById('game');
+  const raisin    = document.getElementById('raisinWrap');
+  const house     = document.getElementById('house');
+  const door      = document.getElementById('door');
+  const wave      = document.getElementById('wave');
+  const hint      = document.getElementById('hint');
+  const dialogue  = document.getElementById('dialogue');
+  const nameEl    = document.getElementById('name');
+  const textEl    = document.getElementById('text');
+  const next      = document.getElementById('next');
+  const restart   = document.getElementById('restart');
+  const soundBtn  = document.getElementById('soundToggle');
 
-function arrive(){
-  done=true; dragging=false;
-  raisin.classList.add('success');
-  hint.style.display='none';
-  setTimeout(()=>{
-    wave.style.display='block';
-    dialogue.style.display='block';
-    nameEl.textContent='OLA 🌊'; text.textContent='¡Ola, ola!';
-  },500);
-}
-next.addEventListener('click',()=>{
-  if(step===0){step=1;nameEl.textContent='PASA 🍇';text.textContent='¿Puedo pasar?';}
-  else if(step===1){step=2;nameEl.textContent='OLA 🌊';text.textContent='¡Pasa, pasa!';next.textContent='🎉 ¡Entrar!';}
-  else {dialogue.style.display='none';wave.style.transform='translateY(5px) scale(1.08)';restart.style.display='block';}
-});
-restart.addEventListener('click',()=>location.reload());
+  let dragging = false;
+  let done = false;
+  let step = 0;
+  let offsetX = 0, offsetY = 0;
+  let soundOn = true;
+  let audioCtx = null;
+
+  // ---------- Sound (Web Audio API, no external files) ----------
+  function getCtx(){
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    return audioCtx;
+  }
+
+  function tone(freq, start, duration, type='sine', gainPeak=0.18){
+    if (!soundOn) return;
+    const ctx = getCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+    gain.gain.setValueAtTime(0, ctx.currentTime + start);
+    gain.gain.linearRampToValueAtTime(gainPeak, ctx.currentTime + start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(ctx.currentTime + start);
+    osc.stop(ctx.currentTime + start + duration + 0.05);
+  }
+
+  function sfxPickUp(){ tone(340, 0, 0.09, 'triangle', 0.12); }
+  function sfxArrive(){
+    tone(523.25, 0,   0.12, 'sine', 0.16);
+    tone(659.25, 0.09,0.12, 'sine', 0.16);
+    tone(783.99, 0.18,0.18, 'sine', 0.18);
+  }
+  function sfxClick(){ tone(420, 0, 0.06, 'triangle', 0.1); }
+  function sfxVictory(){
+    const notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
+    notes.forEach((f,i)=> tone(f, i*0.11, 0.22, 'triangle', 0.15));
+  }
+
+  soundBtn.addEventListener('click', () => {
+    soundOn = !soundOn;
+    soundBtn.textContent = soundOn ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-label', soundOn ? 'Silenciar sonido' : 'Activar sonido');
+    if (soundOn) { const ctx = getCtx(); if (ctx && ctx.state === 'suspended') ctx.resume(); }
+  });
+
+  // ---------- Confetti ----------
+  const CONFETTI_COLORS = ['#ff6b6b','#ffd93d','#6c4bd9','#4fd0f5','#5cb05c','#ff9f43'];
+  function launchConfetti(){
+    const rect = game.getBoundingClientRect();
+    for (let i=0;i<36;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      const size = 6 + Math.random()*6;
+      el.style.width = size+'px';
+      el.style.height = (size*0.7)+'px';
+      el.style.left = (Math.random()*rect.width)+'px';
+      el.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      el.style.setProperty('--fallDist', (rect.height*0.6 + Math.random()*rect.height*0.5)+'px');
+      el.style.setProperty('--rot', (Math.random()*720-360)+'deg');
+      el.style.animationDuration = (1.6 + Math.random()*1.2)+'s';
+      el.style.animationDelay = (Math.random()*0.4)+'s';
+      game.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  }
+
+  // ---------- Drag logic (unified pointer events) ----------
+  function clampToStage(x, y){
+    const g = game.getBoundingClientRect();
+    const w = raisin.offsetWidth, h = raisin.offsetHeight;
+    return {
+      x: Math.max(2, Math.min(g.width - w - 2, x)),
+      y: Math.max(6, Math.min(g.height - h - 4, y))
+    };
+  }
+
+  function setRaisinPos(x, y){
+    raisin.style.left = x + 'px';
+    raisin.style.top = y + 'px';
+    raisin.style.bottom = 'auto';
+  }
+
+  function checkArrival(){
+    const a = raisin.getBoundingClientRect();
+    const d = door.getBoundingClientRect();
+    const cx = a.left + a.width/2, cy = a.top + a.height/2;
+    return (cx > d.left - 18 && cx < d.right + 18 && cy > d.top - 40 && cy < d.bottom + 40);
+  }
+
+  function onPointerDown(e){
+    if (done) return;
+    raisin.setPointerCapture?.(e.pointerId);
+    const r = raisin.getBoundingClientRect();
+    const g = game.getBoundingClientRect();
+    offsetX = e.clientX - r.left;
+    offsetY = e.clientY - r.top;
+    dragging = true;
+    raisin.classList.add('lifted');
+    sfxPickUp();
+    // resume audio context on first gesture (mobile autoplay policies)
+    const ctx = getCtx(); if (ctx && ctx.state === 'suspended') ctx.resume();
+    // normalize current position to left/top coordinates immediately
+    setRaisinPos(r.left - g.left, r.top - g.top);
+  }
+
+  function onPointerMove(e){
+    if (!dragging || done) return;
+    e.preventDefault();
+    const g = game.getBoundingClientRect();
+    const raw = { x: e.clientX - g.left - offsetX, y: e.clientY - g.top - offsetY };
+    const p = clampToStage(raw.x, raw.y);
+    setRaisinPos(p.x, p.y);
+    raisin.classList.add('walking');
+    if (checkArrival()) arrive();
+  }
+
+  function onPointerUp(){
+    if (!dragging) return;
+    dragging = false;
+    raisin.classList.remove('lifted', 'walking');
+  }
+
+  raisin.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointermove', onPointerMove, { passive:false });
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
+
+  // Keyboard accessibility: arrow keys nudge the raisin toward the door
+  raisin.addEventListener('keydown', (e) => {
+    if (done) return;
+    const STEP = 14;
+    const g = game.getBoundingClientRect();
+    const r = raisin.getBoundingClientRect();
+    let x = r.left - g.left, y = r.top - g.top;
+    let moved = false;
+    if (e.key === 'ArrowRight'){ x += STEP; moved = true; }
+    else if (e.key === 'ArrowLeft'){ x -= STEP; moved = true; }
+    else if (e.key === 'ArrowUp'){ y -= STEP; moved = true; }
+    else if (e.key === 'ArrowDown'){ y += STEP; moved = true; }
+    if (!moved) return;
+    e.preventDefault();
+    const p = clampToStage(x, y);
+    setRaisinPos(p.x, p.y);
+    raisin.classList.add('walking');
+    clearTimeout(raisin._walkTimer);
+    raisin._walkTimer = setTimeout(()=>raisin.classList.remove('walking'), 220);
+    if (checkArrival()) arrive();
+  });
+
+  // ---------- Arrival & dialogue flow ----------
+  function arrive(){
+    done = true;
+    dragging = false;
+    raisin.classList.remove('walking');
+    raisin.classList.add('success');
+    door.classList.add('glow');
+    hint.style.display = 'none';
+    sfxArrive();
+    if (navigator.vibrate) navigator.vibrate(40);
+
+    setTimeout(() => {
+      wave.style.display = 'block';
+      wave.classList.add('enter', 'talk');
+      dialogue.style.display = 'block';
+      dialogue.classList.add('show');
+      nameEl.textContent = 'OLA 🌊';
+      textEl.textContent = '¡Ola, ola!';
+    }, 500);
+  }
+
+  next.addEventListener('click', () => {
+    sfxClick();
+    if (step === 0){
+      step = 1;
+      nameEl.textContent = 'PASA 🍇';
+      textEl.textContent = '¿Puedo pasar?';
+    } else if (step === 1){
+      step = 2;
+      nameEl.textContent = 'OLA 🌊';
+      textEl.textContent = '¡Pasa, pasa!';
+      next.textContent = '🎉 ¡Entrar!';
+    } else {
+      dialogue.classList.remove('show');
+      dialogue.style.display = 'none';
+      wave.classList.remove('talk');
+      wave.style.transform = 'translateY(5px) scale(1.08)';
+      restart.style.display = 'block';
+      restart.classList.add('show');
+      sfxVictory();
+      launchConfetti();
+    }
+  });
+
+  restart.addEventListener('click', () => location.reload());
+})();
 </script>
 </body>
 </html>
