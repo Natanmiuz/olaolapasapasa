@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pasa Pasa</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#bfe9ff}
+  body{display:flex;justify-content:center;align-items:center}
+  #game{
+    position:relative;width:min(100vw,480px);height:100vh;max-height:900px;overflow:hidden;
+    background:linear-gradient(#8fdcff 0 57%,#7dcc69 57% 100%);
+    touch-action:none;
+  }
+  .sun{position:absolute;width:72px;height:72px;border-radius:50%;background:#ffe47a;right:28px;top:35px;box-shadow:0 0 25px #fff3a8}
+  .cloud{position:absolute;background:#fff;border-radius:40px;opacity:.9}
+  .c1{width:105px;height:32px;left:20px;top:85px}.c1:before{content:"";position:absolute;width:45px;height:45px;background:#fff;border-radius:50%;left:20px;top:-22px}.c1:after{content:"";position:absolute;width:55px;height:55px;background:#fff;border-radius:50%;left:52px;top:-30px}
+  .c2{width:85px;height:27px;right:35px;top:155px}.c2:before{content:"";position:absolute;width:40px;height:40px;background:#fff;border-radius:50%;left:12px;top:-20px}.c2:after{content:"";position:absolute;width:42px;height:42px;background:#fff;border-radius:50%;left:43px;top:-23px}
+  .path{position:absolute;left:0;right:0;bottom:0;height:43%;background:#e7c98e;clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);opacity:.95}
+  .house{position:absolute;right:12%;top:30%;width:180px;height:150px}
+  .roof{position:absolute;left:-15px;top:0;width:210px;height:90px;background:#c85b4b;clip-path:polygon(50% 0,100% 100%,0 100%)}
+  .wall{position:absolute;left:15px;top:58px;width:150px;height:92px;background:#fff2c9;border:4px solid #b85c45;border-radius:5px}
+  .door{position:absolute;left:58px;bottom:0;width:50px;height:68px;background:#8c5a43;border:4px solid #69412f;border-radius:6px 6px 0 0}
+  .knob{position:absolute;right:7px;top:34px;width:7px;height:7px;background:#f6d36d;border-radius:50%}
+  .window{position:absolute;right:15px;top:75px;width:37px;height:37px;background:#8dd7ee;border:4px solid #8a5a45}
+  .window:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px solid #8a5a45}
+  .window:before{content:"";position:absolute;top:50%;left:0;right:0;border-top:3px solid #8a5a45}
+  #raisin{
+    position:absolute;left:10%;bottom:24%;width:66px;height:76px;cursor:pointer;
+    transition:transform .08s linear;
+    filter:drop-shadow(0 7px 4px rgba(0,0,0,.2));
+    z-index:5;
+  }
+  .body{position:absolute;inset:4px 5px 2px;border-radius:47% 52% 45% 48%;background:radial-gradient(circle at 35% 25%,#8d4a20,#5a260f 62%,#38170a);border:3px solid #3c190b}
+  .eye{position:absolute;top:28px;width:9px;height:12px;border-radius:50%;background:#17100d;z-index:2}
+  .e1{left:21px}.e2{right:20px}
+  .mouth{position:absolute;left:26px;top:45px;width:16px;height:8px;border-bottom:3px solid #1b0e08;border-radius:0 0 50% 50%;z-index:2}
+  .leaf{position:absolute;left:27px;top:0;width:25px;height:12px;background:#4b9a4b;border-radius:100% 0 100% 0;transform:rotate(-20deg);z-index:3}
+  .leg{position:absolute;bottom:-10px;width:5px;height:13px;background:#3b2115;border-radius:5px}.l1{left:20px}.l2{right:19px}
+  .arm{position:absolute;top:42px;width:18px;height:5px;background:#3b2115;border-radius:5px}.a1{left:-12px;transform:rotate(25deg)}.a2{right:-12px;transform:rotate(-25deg)}
+  #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;background:rgba(255,255,255,.86);padding:10px 16px;border-radius:22px;font-weight:700;color:#4c3425;z-index:10;white-space:nowrap;box-shadow:0 3px 10px #0002}
+  #dialogue{position:absolute;left:7%;right:7%;bottom:8%;display:none;z-index:20;background:#fff;border:4px solid #503527;border-radius:22px;padding:14px 16px;box-shadow:0 8px 25px #0003;min-height:100px}
+  #dialogue .name{font-weight:900;font-size:14px;color:#6b3d27;margin-bottom:4px}
+  #text{font-size:20px;font-weight:800;color:#2f241e}
+  #next{position:absolute;right:12px;bottom:10px;border:0;background:#6c4bd9;color:#fff;border-radius:15px;padding:8px 13px;font-weight:800}
+  #wave{position:absolute;right:18%;bottom:31%;width:95px;height:88px;display:none;z-index:15;filter:drop-shadow(0 7px 4px #0002)}
+  .wavebody{position:absolute;inset:8px 0 0;background:#35bde8;border:4px solid #166c9c;border-radius:55% 48% 45% 45%;overflow:hidden}
+  .foam{position:absolute;top:-4px;left:-5px;width:105px;height:28px;background:#fff;border-radius:50%;transform:rotate(-4deg)}
+  .we1,.we2{position:absolute;top:36px;width:8px;height:12px;border-radius:50%;background:#123b53}.we1{left:28px}.we2{right:27px}
+  .wmouth{position:absolute;left:39px;top:50px;width:18px;height:10px;border-bottom:3px solid #123b53;border-radius:0 0 50% 50%}
+  #restart{display:none;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:30;border:0;border-radius:18px;background:#fff;padding:14px 20px;font-size:18px;font-weight:900;box-shadow:0 8px 25px #0003}
+  .success{animation:bounce .5s ease}
+  @keyframes bounce{50%{transform:scale(1.12)}}
+  @media(min-height:850px){#raisin{bottom:22%}.house{top:31%}}
+</style>
+</head>
+<body>
+<div id="game">
+  <div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div>
+  <div class="path"></div>
+  <div class="house" id="house">
+    <div class="roof"></div><div class="wall"></div><div class="window"></div>
+    <div class="door" id="door"><div class="knob"></div></div>
+  </div>
+
+  <div id="raisin" aria-label="pasa">
+    <div class="leaf"></div><div class="body"></div>
+    <div class="eye e1"></div><div class="eye e2"></div><div class="mouth"></div>
+    <div class="arm a1"></div><div class="arm a2"></div><div class="leg l1"></div><div class="leg l2"></div>
+  </div>
+
+  <div id="wave">
+    <div class="wavebody"><div class="foam"></div><div class="we1"></div><div class="we2"></div><div class="wmouth"></div></div>
+  </div>
+
+  <div id="hint">👆 Arrastra la pasa hasta la puerta</div>
+
+  <div id="dialogue">
+    <div class="name" id="name">OLA 🌊</div>
+    <div id="text">¡Ola, ola!</div>
+    <button id="next">Siguiente →</button>
+  </div>
+
+  <button id="restart">🍇 Jugar otra vez</button>
+</div>
+
+<script>
+const raisin=document.getElementById('raisin');
+const house=document.getElementById('house');
+const door=document.getElementById('door');
+const wave=document.getElementById('wave');
+const hint=document.getElementById('hint');
+const dialogue=document.getElementById('dialogue');
+const nameEl=document.getElementById('name');
+const text=document.getElementById('text');
+const next=document.getElementById('next');
+const restart=document.getElementById('restart');
+let dragging=false, done=false, step=0, offsetX=0, offsetY=0;
+
+function posFromEvent(e){
+  const r=document.getElementById('game').getBoundingClientRect();
+  const p=e.touches ? e.touches[0] : e;
+  return {x:p.clientX-r.left,y:p.clientY-r.top};
+}
+function move(e){
+  if(!dragging || done)return;
+  e.preventDefault();
+  const p=posFromEvent(e);
+  const g=document.getElementById('game').getBoundingClientRect();
+  let x=p.x-offsetX, y=p.y-offsetY;
+  x=Math.max(5,Math.min(g.width-71,x)); y=Math.max(10,Math.min(g.height-85,y));
+  raisin.style.left=x+'px'; raisin.style.top=y+'px'; raisin.style.bottom='auto';
+  const a=raisin.getBoundingClientRect(), d=door.getBoundingClientRect();
+  const cx=a.left+a.width/2, cy=a.top+a.height/2;
+  if(cx>d.left-15 && cx<d.right+15 && cy>d.top-35 && cy<d.bottom+35) arrive();
+}
+function start(e){
+  if(done)return;
+  const r=raisin.getBoundingClientRect();
+  const p=e.touches?e.touches[0]:e;
+  offsetX=p.clientX-r.left; offsetY=p.clientY-r.top;
+  dragging=true;
+}
+function end(){dragging=false}
+raisin.addEventListener('touchstart',start,{passive:false});
+raisin.addEventListener('mousedown',start);
+window.addEventListener('touchmove',move,{passive:false});
+window.addEventListener('mousemove',move);
+window.addEventListener('touchend',end);
+window.addEventListener('mouseup',end);
+
+function arrive(){
+  done=true; dragging=false;
+  raisin.classList.add('success');
+  hint.style.display='none';
+  setTimeout(()=>{
+    wave.style.display='block';
+    dialogue.style.display='block';
+    nameEl.textContent='OLA 🌊'; text.textContent='¡Ola, ola!';
+  },500);
+}
+next.addEventListener('click',()=>{
+  if(step===0){step=1;nameEl.textContent='PASA 🍇';text.textContent='¿Puedo pasar?';}
+  else if(step===1){step=2;nameEl.textContent='OLA 🌊';text.textContent='¡Pasa, pasa!';next.textContent='🎉 ¡Entrar!';}
+  else {dialogue.style.display='none';wave.style.transform='translateY(5px) scale(1.08)';restart.style.display='block';}
+});
+restart.addEventListener('click',()=>location.reload());
+</script>
+</body>
+</html>
