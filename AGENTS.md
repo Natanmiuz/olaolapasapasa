@@ -4,8 +4,8 @@
 A single-file vanilla HTML/CSS/JS game ("Pasa Pasa"): drag the raisin (🍇 pasa) to the house door to trigger a short dialogue with the wave (🌊 ola). All UI text and dialogue is in Spanish — keep new strings in Spanish.
 
 ## No build system
-- `pasa_pasa.html` is the entire app: inline `<style>`, markup, and one inline `<script>`. No dependencies, no bundler, no npm, no server needed.
-- To test: open `pasa_pasa.html` directly in a browser. There is no test suite or lint/typecheck step.
+- `index.html` is the entire app: inline `<style>`, markup, and one inline `<script>`. No dependencies, no bundler, no npm, no server needed.
+- To test: open `index.html` directly in a browser. There is no test suite or lint/typecheck step.
 - Do not introduce a build tool, framework, or external assets unless asked — the file is intentionally self-contained. Sounds use the Web Audio API (no audio files).
 
 ## Code conventions (differ from defaults)
