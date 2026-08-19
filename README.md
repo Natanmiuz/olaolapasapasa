@@ -28,7 +28,7 @@ Una pasa (🍇) llega a la playa buscando refugio y se encuentra con una ola (�
 
 ## Cómo jugar
 
-1. Abre `pasa_pasa.html` en cualquier navegador.
+1. Abre `index.html` en cualquier navegador.
 2. Arrastra la pasa hasta la puerta de la casa — en escritorio también puedes moverla con las flechas del teclado.
 3. Pulsa **Siguiente** para avanzar el diálogo con la ola.
 4. Al terminar, te esperan confeti y un jingle de victoria. 🎉
@@ -39,8 +39,8 @@ No hay build, ni instalación, ni servidor:
 
 ```bash
 # Basta con abrir el archivo directamente en el navegador
-open pasa_pasa.html    # macOS
-start pasa_pasa.html   # Windows
+open index.html    # macOS
+start index.html   # Windows
 ```
 
 ## Estructura
@@ -48,7 +48,7 @@ start pasa_pasa.html   # Windows
 Todo el juego vive en un único archivo autocontenido:
 
 ```
-pasa_pasa.html   # Markup + CSS + JavaScript en línea
+index.html   # Markup + CSS + JavaScript en línea
 docs/screenshot.png
 ```
 
