@@ -1,75 +1,83 @@
 <div align="center">
 
-<img src="./docs/screenshot.png" alt="Pasa Pasa en acción" width="440" />
+<img src="./docs/screenshot.png" alt="Pasa Pasa: la pasa en la playa, frente a la casita de la isla" width="360" />
 
 # 🍇 Pasa Pasa
 
 *Un mini-juego de arrastrar en un solo archivo, sin dependencias y en español*
 
+[![Jugar ahora](https://img.shields.io/badge/Jugar-ahora-6c4bd9?style=flat-square&logo=vercel&logoColor=white)](https://olaolapasapasa.vercel.app)
+[![Dependencias: 0](https://img.shields.io/badge/dependencias-0-5cb05c?style=flat-square)](#ejecutar-en-local)
 [![GitHub stars](https://img.shields.io/github/stars/Natanmiuz/olaolapasapasa?style=flat-square&logo=github)](https://github.com/Natanmiuz/olaolapasapasa)
 
-[Características](#características) • [Cómo jugar](#cómo-jugar) • [Ejecutar](#ejecutar) • [Estructura](#estructura) • [Sonido](#sonido) • [Accesibilidad](#accesibilidad) • [Colaborar](#colaborar)
+[Características](#características) • [Cómo jugar](#cómo-jugar) • [Ejecutar en local](#ejecutar-en-local) • [Cómo funciona](#cómo-funciona) • [Accesibilidad](#accesibilidad) • [Colaborar](#colaborar)
 
 </div>
 
-Una pasa (🍇) llega a la playa buscando refugio y se encuentra con una ola (🌊). Arrastra la pasa hasta la puerta de la casita, charla con la ola y déjala pasar. Cada partida completada suma al contador. Toda la interfaz está en español.
+Una pasa llega a la playa buscando refugio y se encuentra con una ola. Arrástrala hasta la puerta de la casita, charla con la ola y déjala pasar: «¡Ola, ola!» — «¡Pasa, pasa!». Todo el chiste está en el doble sentido: *ola* suena a «hola» y *pasa* es a la vez la uva pasa y «adelante».
+
+Cada partida completada suma a un contador que se guarda en tu navegador.
 
 ## Características
 
-- **Motor propio en canvas**: un bucle `requestAnimationFrame` con *delta time* dibuja el mundo; el diálogo y los botones siguen siendo HTML.
-- **Física de la pasa**: se estira al cogerla, se aplasta y rebota al soltarla, conserva la inercia si la lanzas (¡y cuenta si llega deslizando a la puerta!) y se inclina según la velocidad.
-- **Arrastrar y soltar** con ratón o táctil, mediante eventos *pointer* unificados.
-- **Control por teclado** con las flechas, para jugar sin ratón.
-- **Diálogo en 3 pasos** entre la pasa y la ola. Al final la puerta se abre, la pasa entra en casa y se enciende la luz.
+- **Física con gracia**: la pasa se estira al cogerla, se aplasta y rebota al soltarla, y conserva la inercia si la lanzas. Si llega deslizando a la puerta, también cuenta.
+- **Final con recompensa**: la puerta se abre, la pasa entra en casa, se enciende la luz y cae confeti.
 - **Contador de partidas** guardado en `localStorage`: «¡Has dejado pasar a la pasa 7 veces!».
-- **Efectos de sonido generados** con la Web Audio API: sin archivos de audio ni licencias que gestionar.
-- **Escena animada**: sol, pájaros, nubes, palmera, espuma de mar y conchas.
-- **Respeto por `prefers-reduced-motion`** para quien prefiera menos animación.
+- **Ratón, táctil y teclado**: eventos *pointer* unificados y control con las flechas.
+- **Sonido sintetizado** con la Web Audio API, sin archivos de audio.
+- **Un solo `index.html`**: sin build, sin dependencias, sin imágenes; todo se dibuja con Canvas 2D.
 
-> [!NOTE]
-> El juego está pensado para móvil (táctil) y escritorio (ratón y teclado).
+> [!TIP]
+> Está pensado sobre todo para el móvil: ábrelo en el teléfono y lanza la pasa con el dedo.
 
 ## Cómo jugar
 
-1. Abre `index.html` en cualquier navegador.
-2. Arrastra (o lanza) la pasa hasta la puerta de la casa — en escritorio también puedes moverla con las flechas del teclado.
-3. Pulsa **Siguiente** para avanzar el diálogo con la ola.
-4. Pulsa **¡Entrar!**: la pasa entra en casa, el contador sube y te esperan confeti y un jingle de victoria. 🎉
-5. **Jugar otra vez** reinicia la partida sin recargar la página.
+1. Abre la [demo](https://olaolapasapasa.vercel.app) o el archivo `index.html`.
+2. Arrastra (o lanza) la pasa hasta la puerta. En escritorio también puedes moverla con las flechas: un toque la empuja un poco y, manteniéndolas pulsadas, camina.
+3. Pulsa **Siguiente** para avanzar el diálogo con la ola y **¡Entrar!** para terminar.
+4. **Jugar otra vez** reinicia la partida sin recargar; el contador se conserva.
 
-## Ejecutar
+El botón 🔊 (arriba a la izquierda) silencia o reactiva el sonido.
 
-No hay build, ni instalación, ni servidor:
+## Ejecutar en local
+
+No hay nada que instalar. Basta con abrir el archivo en el navegador:
 
 ```bash
-# Basta con abrir el archivo directamente en el navegador
-open index.html    # macOS
 start index.html   # Windows
+open index.html    # macOS
 ```
 
-## Estructura
+Si prefieres servirlo por HTTP (por ejemplo, para probarlo desde el móvil en tu red local), cualquier servidor estático vale:
 
-Todo el juego vive en un único archivo autocontenido:
-
-```
-index.html   # Markup + CSS + JavaScript en línea
-docs/screenshot.png
+```bash
+python -m http.server 8765
 ```
 
-- **Canvas 2D** para el mundo: escenario, pasa, ola y confeti se dibujan con *paths*, sin imágenes.
-- **HTML + CSS** para la interfaz (diálogo, botones, contador), con variables personalizadas en `:root` que también usa el canvas.
-- **JavaScript** en una IIFE con `'use strict'`, sin dependencias ni variables globales: bucle `update(dt)` → `render()`, muelles (`spring`) para la física y *tweens* con promesas para la secuencia final.
-- **Sonido** mediante `tone()`, `sweep()` y helpers de SFX (`sfxPickUp`, `sfxDrop`, `sfxArrive`, `sfxDoorOpen`, `sfxVictory`…) sobre la Web Audio API.
+## Cómo funciona
 
-## Sonido
+El juego es un motor pequeño hecho a mano dentro de `index.html`:
 
-Los efectos se sintetizan en tiempo real con la Web Audio API, por lo que no hay archivos de audio externos. Pulsa el botón **🔊** (arriba a la izquierda) para silenciar o reactivar el sonido.
+- **Híbrido canvas + HTML.** El mundo (playa, casa, pasa, ola, confeti) se dibuja en un `<canvas>`; el diálogo, los botones y el contador siguen siendo HTML para conservar el foco, `aria-live` y el texto nítido.
+- **Bucle de juego.** `requestAnimationFrame` llama a `update(dt)` y `render()` en cada fotograma; todo el movimiento usa *delta time*.
+- **Física con muelles.** La elevación, el *squash & stretch*, la inclinación y la aparición de la ola son muelles amortiguados (`spring`); la inercia es velocidad con fricción y rebote en los bordes.
+- **Secuencia final con *tweens*.** La puerta, el paseo de la pasa y la cuenta del marcador son *tweens* basados en promesas, encadenados con `async`/`await`.
+- **Perspectiva.** La pasa encoge a medida que sube por el camino, así cabe por la puerta de la casa del horizonte.
+
+```
+index.html           # Todo el juego: CSS, markup y JavaScript en línea
+docs/screenshot.png  # Captura del README
+AGENTS.md            # Guía de arquitectura y convenciones para tocar el código
+```
+
+> [!NOTE]
+> Si vas a modificar el juego, empieza por [AGENTS.md](AGENTS.md): explica la estructura del bucle, el estado, el reinicio sin recarga y los detalles que conviene no romper.
 
 ## Accesibilidad
 
-- Se puede jugar solo con teclado: el canvas recibe el foco (con un anillo visible alrededor de la pasa) y las flechas la mueven; manteniéndolas pulsadas, camina.
-- Con `prefers-reduced-motion` se desactivan las animaciones CSS y, en el canvas, se congelan las animaciones ambientales, la física deja de rebotar y no hay confeti.
-- El diálogo y el resultado final se anuncian con `aria-live`, y los elementos interactivos tienen etiquetas accesibles.
+- Se puede jugar solo con teclado: el escenario recibe el foco (con un anillo visible alrededor de la pasa) y las flechas la mueven.
+- Con `prefers-reduced-motion` se desactivan las animaciones CSS y, en el canvas, se congela el escenario, la física deja de rebotar y no hay confeti.
+- El diálogo y el resultado final se anuncian con `aria-live`, y los controles tienen etiquetas accesibles.
 
 ## Colaborar
 
