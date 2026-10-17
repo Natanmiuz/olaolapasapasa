@@ -11,139 +11,39 @@
     --sea1:#2fb6e0; --sea2:#1a8fc0;
     --ink:#3c190b; --paper:#fffaf0;
     --purple:#6c4bd9; --purple-dark:#5637b8;
+    --glass:rgba(255,255,255,.55); --glass-edge:rgba(255,255,255,.7);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
   html,body{margin:0;width:100%;height:100%;overflow:hidden;
     font-family:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif;background:#bfe9ff}
   body{display:flex;justify-content:center;align-items:center}
+  button{font-family:inherit;cursor:pointer}
 
   #game{
     position:relative;width:min(100vw,480px);height:100vh;max-height:900px;overflow:hidden;
-    background:linear-gradient(#dff6ff 0%, var(--sky-top) 40%, var(--sky-top) 57%, var(--sea1) 57%, var(--sea2) 100%);
+    background:var(--sky-top);
     touch-action:none;
     outline:none;
   }
 
-  /* ---------- Sky dressing ---------- */
-  .sun{position:absolute;width:74px;height:74px;border-radius:50%;right:26px;top:34px;
-    background:radial-gradient(circle at 35% 30%,#fff7d6,#ffe47a 55%,#ffce54 100%);
-    box-shadow:0 0 40px 6px rgba(255,229,130,.65);
-    animation:pulse 4s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  /* ---------- Stage (canvas: scenery, raisin, wave, confetti) ---------- */
+  #stage{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
 
-  .bird{position:absolute;width:20px;height:8px;opacity:.75;animation:fly 14s linear infinite}
-  .bird:before,.bird:after{content:"";position:absolute;top:0;width:11px;height:8px;border-top:2px solid #375;border-radius:50% 50% 0 0}
-  .bird:before{left:0;transform:rotate(15deg);border-color:#3a2a20}
-  .bird:after{right:0;transform:rotate(-15deg) scaleX(-1);border-color:#3a2a20}
-  .b1{top:70px;left:-30px;animation-delay:0s}
-  .b2{top:100px;left:-60px;animation-delay:5s;transform:scale(.8)}
-  @keyframes fly{0%{transform:translateX(0)}100%{transform:translateX(560px)}}
-
-  .cloud{position:absolute;background:#fff;border-radius:40px;opacity:.92;animation:drift 40s linear infinite}
-  .c1{width:105px;height:32px;left:-120px;top:85px}
-  .c1:before{content:"";position:absolute;width:45px;height:45px;background:#fff;border-radius:50%;left:20px;top:-22px}
-  .c1:after{content:"";position:absolute;width:55px;height:55px;background:#fff;border-radius:50%;left:52px;top:-30px}
-  .c2{width:85px;height:27px;left:-90px;top:150px;animation-duration:55s;animation-delay:-20s}
-  .c2:before{content:"";position:absolute;width:40px;height:40px;background:#fff;border-radius:50%;left:12px;top:-20px}
-  .c2:after{content:"";position:absolute;width:42px;height:42px;background:#fff;border-radius:50%;left:43px;top:-23px}
-  @keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(640px)}}
-
-  .palm{position:absolute;left:4%;bottom:42%;width:70px;height:150px;z-index:2}
-  .trunk{position:absolute;left:28px;bottom:0;width:12px;height:110px;background:linear-gradient(#8a6238,#6b4826);border-radius:3px;
-    clip-path:polygon(20% 100%,35% 0,65% 0,80% 100%)}
-  .frond{position:absolute;left:34px;bottom:100px;width:46px;height:14px;background:#3f9142;border-radius:0 60% 60% 0;transform-origin:0 50%}
-  .f1{transform:rotate(-35deg)}.f2{transform:rotate(-8deg)}.f3{transform:rotate(18deg)}.f4{transform:rotate(45deg)}.f5{transform:rotate(70deg)}
-
-  /* ---------- Beach & sea ---------- */
-  .path{position:absolute;left:0;right:0;bottom:0;height:43%;background:var(--sand);
-    clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);}
-  .path:after{content:"";position:absolute;inset:0;background:
-    radial-gradient(ellipse 90px 14px at 20% 70%, rgba(255,255,255,.35), transparent 70%),
-    radial-gradient(ellipse 70px 10px at 70% 50%, rgba(255,255,255,.3), transparent 70%),
-    radial-gradient(ellipse 60px 10px at 45% 88%, rgba(217,184,119,.4), transparent 70%);
-  }
-  .seafoam{position:absolute;left:0;right:0;height:14px;background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.85) 0 22px, transparent 22px 44px);
-    opacity:.8;border-radius:50%;animation:foamMove 3.2s ease-in-out infinite;}
-  .sf1{top:56.5%}.sf2{top:53%;opacity:.5;animation-delay:-1.6s}
-  @keyframes foamMove{0%,100%{transform:translateX(0) scaleY(1)}50%{transform:translateX(14px) scaleY(1.3)}}
-
-  .shell{position:absolute;width:14px;height:10px;background:#f3c9a3;border-radius:50% 50% 40% 40%;opacity:.85;z-index:1}
-  .sh1{left:12%;bottom:8%;transform:rotate(-15deg)}
-  .sh2{left:60%;bottom:5%;transform:rotate(20deg);width:10px;height:8px}
-
-  /* ---------- House ---------- */
-  .house{position:absolute;right:10%;top:29%;width:180px;height:150px;z-index:3;
-    filter:drop-shadow(0 8px 6px rgba(0,0,0,.15))}
-  .roof{position:absolute;left:-15px;top:0;width:210px;height:90px;background:linear-gradient(#d8695a,#b6473a);
-    clip-path:polygon(50% 0,100% 100%,0 100%)}
-  .roofRidge{position:absolute;left:35px;top:-4px;width:110px;height:10px;background:#a3392d;border-radius:6px;
-    clip-path:polygon(50% 0,100% 100%,0 100%)}
-  .wall{position:absolute;left:15px;top:58px;width:150px;height:92px;background:linear-gradient(#fff8e0,#fce9b8);
-    border:4px solid #b85c45;border-radius:5px}
-  .door{position:absolute;left:58px;bottom:0;width:50px;height:68px;background:linear-gradient(#9c6a50,#7a4b36);
-    border:4px solid #69412f;border-radius:6px 6px 0 0;transition:filter .3s}
-  .door.glow{filter:drop-shadow(0 0 10px #ffe47a) brightness(1.15)}
-  .knob{position:absolute;right:7px;top:34px;width:7px;height:7px;background:#f6d36d;border-radius:50%;box-shadow:0 0 4px #f6d36d}
-  .window{position:absolute;right:15px;top:75px;width:37px;height:37px;background:radial-gradient(circle at 35% 30%,#c8f0fb,#8dd7ee);border:4px solid #8a5a45}
-  .window:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px solid #8a5a45}
-  .window:before{content:"";position:absolute;top:50%;left:0;right:0;border-top:3px solid #8a5a45}
-  .flowerbox{position:absolute;left:52px;bottom:64px;width:58px;height:10px;background:#8a5a45;border-radius:2px}
-  .flower{position:absolute;bottom:8px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 2px #fff}
-  .fl1{left:4px;background:#e8637a}.fl2{left:22px;background:#f6c34a}.fl3{left:40px;background:#e8637a}
-
-  /* ---------- Raisin (player) ---------- */
-  #raisinWrap{position:absolute;left:8%;bottom:22%;width:70px;height:96px;z-index:5;cursor:grab;touch-action:none;}
-  #raisinWrap:active{cursor:grabbing}
-  #raisinWrap:focus-visible #raisin{outline:3px solid #fff;outline-offset:3px;border-radius:50%}
-  .shadow{position:absolute;bottom:-2px;left:50%;width:52px;height:12px;background:radial-gradient(ellipse,rgba(0,0,0,.32),transparent 70%);
-    transform:translateX(-50%);transition:width .12s,opacity .12s}
-  #raisin{position:absolute;left:2px;bottom:14px;width:66px;height:76px;transition:transform .08s linear}
-  .body{position:absolute;inset:4px 5px 2px;border-radius:47% 52% 45% 48%;
-    background:radial-gradient(circle at 35% 25%,#9a5726,#5a260f 62%,#38170a);border:3px solid #3c190b;
-    box-shadow:inset -6px -8px 10px rgba(0,0,0,.35), inset 5px 6px 8px rgba(255,180,120,.25)}
-  .eye{position:absolute;top:28px;width:9px;height:12px;border-radius:50%;background:#17100d;z-index:2}
-  .eye:after{content:"";position:absolute;top:1px;left:2px;width:2.5px;height:3px;background:#fff;border-radius:50%;opacity:.9}
-  .e1{left:21px}.e2{right:20px}
-  .mouth{position:absolute;left:24px;top:44px;width:18px;height:10px;border-bottom:3px solid #1b0e08;border-radius:0 0 50% 50%;z-index:2}
-  .cheek{position:absolute;top:38px;width:7px;height:5px;border-radius:50%;background:#c9694a;opacity:.55;z-index:1}
-  .ch1{left:13px}.ch2{right:13px}
-  .leaf{position:absolute;left:27px;top:0;width:25px;height:12px;background:linear-gradient(#5cb05c,#3f8a3f);border-radius:100% 0 100% 0;transform:rotate(-20deg);transform-origin:0 100%;z-index:3;animation:leafWiggle 2.6s ease-in-out infinite}
-  @keyframes leafWiggle{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(-8deg)}}
-  .leg{position:absolute;bottom:-10px;width:5px;height:13px;background:#3b2115;border-radius:5px}.l1{left:20px}.l2{right:19px}
-  .arm{position:absolute;top:42px;width:18px;height:5px;background:#3b2115;border-radius:5px}
-  .a1{left:-12px;transform:rotate(25deg)}.a2{right:-12px;transform:rotate(-25deg)}
-
-  #raisinWrap.walking .l1{animation:step 0.35s ease-in-out infinite}
-  #raisinWrap.walking .l2{animation:step 0.35s ease-in-out infinite reverse}
-  #raisinWrap.walking .a1{animation:swing 0.35s ease-in-out infinite reverse}
-  #raisinWrap.walking .a2{animation:swing 0.35s ease-in-out infinite}
-  @keyframes step{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(22deg) translateY(-2px)}}
-  @keyframes swing{0%,100%{transform:rotate(25deg)}50%{transform:rotate(45deg)}}
-
-  #raisinWrap.lifted #raisin{transform:scale(1.12) rotate(-4deg)}
-  #raisinWrap.lifted .shadow{width:34px;opacity:.5}
-
-  /* ---------- Wave (NPC) ---------- */
-  #wave{position:absolute;right:16%;bottom:29%;width:98px;height:90px;display:none;z-index:15;
-    filter:drop-shadow(0 7px 5px rgba(0,0,0,.18))}
-  #wave.enter{animation:waveIn .5s cubic-bezier(.34,1.56,.64,1)}
-  @keyframes waveIn{0%{transform:translateY(40px) scale(.6);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
-  .wavebody{position:absolute;inset:8px 0 0;background:linear-gradient(#4fd0f5,#1c86ba);border:4px solid #166c9c;
-    border-radius:55% 48% 45% 45%;overflow:hidden;box-shadow:inset -6px -6px 10px rgba(0,0,0,.2)}
-  .foam{position:absolute;top:-4px;left:-5px;width:105px;height:28px;background:#fff;border-radius:50%;transform:rotate(-4deg)}
-  .we1,.we2{position:absolute;top:36px;width:8px;height:12px;border-radius:50%;background:#123b53}.we1{left:28px}.we2{right:27px}
-  .wmouth{position:absolute;left:39px;top:50px;width:18px;height:10px;border-bottom:3px solid #123b53;border-radius:0 0 50% 50%}
-  .wcheek{position:absolute;top:44px;width:7px;height:5px;border-radius:50%;background:#0d5a7d;opacity:.5}
-  .wc1{left:20px}.wc2{right:20px}
-
-  #wave.talk .wavebody{animation:bob 0.6s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  /* ---------- HUD ---------- */
+  #soundToggle,#githubLink,#counter{position:absolute;top:10px;z-index:25;height:38px;
+    border:2px solid var(--glass-edge);background:var(--glass);backdrop-filter:blur(2px);
+    display:flex;align-items:center;justify-content:center}
+  #soundToggle{left:10px;width:38px;padding:0;border-radius:50%;font-size:17px}
+  #githubLink{right:10px;width:38px;border-radius:50%}
+  #githubLink svg{width:22px;height:22px;fill:var(--ink)}
+  #counter{left:56px;gap:4px;padding:0 13px;border-radius:19px;font-size:16px;font-weight:900;color:var(--ink)}
+  #counter.bump{animation:bump .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes bump{40%{transform:scale(1.25)}}
 
   /* ---------- Dialogue ---------- */
   #hint{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;background:rgba(255,255,255,.9);
     padding:10px 16px;border-radius:22px;font-weight:700;color:#4c3425;z-index:10;white-space:nowrap;
-    box-shadow:0 3px 10px rgba(0,0,0,.15);animation:hintFloat 1.6s ease-in-out infinite}
+    box-shadow:0 3px 10px rgba(0,0,0,.15);animation:hintFloat 1.6s ease-in-out infinite;pointer-events:none}
   @keyframes hintFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
 
   #dialogue{position:absolute;left:6%;right:6%;bottom:8%;display:none;z-index:20;background:var(--paper);
@@ -160,28 +60,22 @@
     padding:9px 15px;font-weight:800;font-size:15px;box-shadow:0 3px 0 var(--purple-dark);transition:transform .08s}
   #next:active{transform:translateY(2px);box-shadow:0 1px 0 var(--purple-dark)}
 
-  #soundToggle{position:absolute;top:10px;left:10px;z-index:25;width:38px;height:38px;border-radius:50%;
-    border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);font-size:17px;
-    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+  /* ---------- End screen ---------- */
+  #end{display:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:30;width:min(84%,330px);
+    background:#fff;border-radius:22px;padding:20px 20px 18px;text-align:center;color:var(--ink);
+    box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  #end.show{animation:popInCenter .35s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes popInCenter{0%{transform:translate(-50%,-50%) scale(.85);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+  #endMsg{margin:0 0 14px;font-size:19px;font-weight:800;line-height:1.35}
+  #endCount{display:inline-block;min-width:1ch;font-size:30px;font-weight:900;color:var(--purple);vertical-align:-3px}
+  #endCount.bump{animation:bump .45s cubic-bezier(.34,1.56,.64,1)}
+  #restart{border:0;border-radius:16px;background:var(--purple);color:#fff;padding:12px 20px;font-size:17px;font-weight:900;
+    box-shadow:0 3px 0 var(--purple-dark)}
+  #restart:active{transform:translateY(2px);box-shadow:0 1px 0 var(--purple-dark)}
 
-  #githubLink{position:absolute;top:10px;right:10px;z-index:25;width:38px;height:38px;border-radius:50%;
-    border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.55);
-    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
-  #githubLink svg{width:22px;height:22px;fill:var(--ink)}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-  #restart{display:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:30;
-    border:0;border-radius:18px;background:#fff;padding:15px 22px;font-size:18px;font-weight:900;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);color:#3c190b}
-  #restart.show{animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
-
-  .confetti{position:absolute;top:-12px;width:9px;height:9px;border-radius:2px;z-index:28;
-    animation:fall linear forwards}
-  @keyframes fall{to{transform:translateY(var(--fallDist)) rotate(var(--rot));opacity:0}}
-
-  .success{animation:bounce .5s ease}
-  @keyframes bounce{50%{transform:scale(1.12)}}
-
-  @media(min-height:850px){#raisinWrap{bottom:20%}.house{top:31%}}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important}
   }
@@ -189,85 +83,113 @@
 </head>
 <body>
 <div id="game" tabindex="-1">
+  <canvas id="stage" tabindex="0" role="application" aria-label="Pasa. Arrástrala o usa las flechas del teclado para llegar a la puerta.">Tu navegador no puede mostrar el juego.</canvas>
+
   <a id="githubLink" href="https://github.com/Natanmiuz/olaolapasapasa" target="_blank" rel="noopener" aria-label="Ver código en GitHub" title="Ver código en GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.16c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.7 1.25 3.35.95.1-.74.4-1.25.72-1.53-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18.92-.26 1.9-.38 2.88-.39.98 0 1.96.13 2.88.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.04.77 2.1v3.13c0 .3.21.66.8.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a>
   <button id="soundToggle" aria-label="Silenciar sonido" title="Sonido">🔊</button>
-
-  <div class="sun"></div>
-  <div class="bird b1"></div><div class="bird b2"></div>
-  <div class="cloud c1"></div><div class="cloud c2"></div>
-
-  <div class="palm">
-    <div class="trunk"></div>
-    <div class="frond f1"></div><div class="frond f2"></div><div class="frond f3"></div>
-    <div class="frond f4"></div><div class="frond f5"></div>
-  </div>
-
-  <div class="seafoam sf1"></div><div class="seafoam sf2"></div>
-
-  <div class="path"></div>
-  <div class="shell sh1"></div><div class="shell sh2"></div>
-
-  <div class="house" id="house">
-    <div class="roof"></div><div class="roofRidge"></div><div class="wall"></div>
-    <div class="flowerbox"></div><div class="flower fl1"></div><div class="flower fl2"></div><div class="flower fl3"></div>
-    <div class="window"></div>
-    <div class="door" id="door"><div class="knob"></div></div>
-  </div>
-
-  <div id="raisinWrap" role="button" tabindex="0" aria-label="Pasa. Arrástrala o usa las flechas del teclado para llegar a la puerta.">
-    <div class="shadow"></div>
-    <div id="raisin">
-      <div class="leaf"></div><div class="body"></div>
-      <div class="eye e1"></div><div class="eye e2"></div>
-      <div class="cheek ch1"></div><div class="cheek ch2"></div>
-      <div class="mouth"></div>
-      <div class="arm a1"></div><div class="arm a2"></div><div class="leg l1"></div><div class="leg l2"></div>
-    </div>
-  </div>
-
-  <div id="wave">
-    <div class="wavebody">
-      <div class="foam"></div><div class="we1"></div><div class="we2"></div>
-      <div class="wcheek wc1"></div><div class="wcheek wc2"></div>
-      <div class="wmouth"></div>
-    </div>
-  </div>
+  <div id="counter" role="img" title="Partidas completadas" aria-label="Partidas completadas: 0">🍇 × <span id="counterNum">0</span></div>
 
   <div id="hint">👆 Arrastra la pasa hasta la puerta</div>
 
   <div id="dialogue" role="status" aria-live="polite">
-    <div class="name" id="name">OLA 🌊</div>
+    <div class="name" id="name">PASA 🍇</div>
     <div id="text">¡Ola, ola!</div>
     <button id="next">Siguiente →</button>
   </div>
 
-  <button id="restart">🍇 Jugar otra vez</button>
+  <div id="end">
+    <p id="endMsg" aria-hidden="true">¡Has dejado pasar a la pasa <span class="nw"><strong id="endCount">0</strong> <span id="endNoun">veces</span>!</span></p>
+    <button id="restart">🍇 Jugar otra vez</button>
+  </div>
+  <p class="sr" id="endSr" aria-live="polite"></p>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const game      = document.getElementById('game');
-  const raisin    = document.getElementById('raisinWrap');
-  const house     = document.getElementById('house');
-  const door      = document.getElementById('door');
-  const wave      = document.getElementById('wave');
-  const hint      = document.getElementById('hint');
-  const dialogue  = document.getElementById('dialogue');
-  const nameEl    = document.getElementById('name');
-  const textEl    = document.getElementById('text');
-  const next      = document.getElementById('next');
-  const restart   = document.getElementById('restart');
-  const soundBtn  = document.getElementById('soundToggle');
+  const game       = document.getElementById('game');
+  const cv         = document.getElementById('stage');
+  const ctx        = cv.getContext('2d');
+  const hint       = document.getElementById('hint');
+  const dialogue   = document.getElementById('dialogue');
+  const nameEl     = document.getElementById('name');
+  const textEl     = document.getElementById('text');
+  const next       = document.getElementById('next');
+  const endEl      = document.getElementById('end');
+  const endCount   = document.getElementById('endCount');
+  const endNoun    = document.getElementById('endNoun');
+  const endSr      = document.getElementById('endSr');
+  const restart    = document.getElementById('restart');
+  const counterEl  = document.getElementById('counter');
+  const counterNum = document.getElementById('counterNum');
+  const soundBtn   = document.getElementById('soundToggle');
   const githubLink = document.getElementById('githubLink');
 
+  const TAU = Math.PI * 2;
+  const DEG = Math.PI / 180;
+  const KEY = 'pasaPasa.completadas';   // localStorage key for the completion counter
+  const KEY_SPEED = 260;                // px/s while an arrow key is held
+  const DIRS = { ArrowLeft:[-1,0], ArrowRight:[1,0], ArrowUp:[0,-1], ArrowDown:[0,1] };
+
+  // Palette shared with the CSS custom properties
+  const css = getComputedStyle(document.documentElement);
+  const v = n => css.getPropertyValue('--' + n).trim();
+  const C = { skyTop:v('sky-top'), sand:v('sand'), sandEdge:v('sand-edge'), sea1:v('sea1'), sea2:v('sea2'), ink:v('ink') };
+
   let dragging = false;
-  let done = false;
-  let step = 0;
+  let done = false;          // raisin reached the door: no more control
+  let step = 0;              // dialogue step 0..2; 3 = finale running
   let offsetX = 0, offsetY = 0;
   let soundOn = true;
   let audioCtx = null;
+  let count = loadCount();
+  let W = 0, H = 0, dpr = 1;
+  let L = null;              // layout, see layout()
+  let T = 0;                 // ambient clock (frozen with reduced motion)
+  let clock = 0;             // real clock
+  let gen = 0;               // bumped by reset(); pending finale steps bail out
+  let tweens = [];
+  let confetti = [];
+  let ptr = null, pid = null;
+  let focusRing = false;
+  let lastBump = 0;
+  const keys = {};
+
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = motionQuery.matches;
+  motionQuery.addEventListener?.('change', e => { reduce = e.matches; });
+
+  // Game objects, filled by reset()
+  const R = {};      // raisin: x,y = feet position in px
+  const Wv = {};     // wave
+  const Door = {};
+
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const spr = x => ({ x, v:0 });
+
+  // Damped spring (semi-implicit Euler). Snaps when motion is reduced.
+  function spring(s, target, k, d, dt){
+    if (reduce){ s.x = target; s.v = 0; return; }
+    s.v += (k * (target - s.x) - d * s.v) * dt;
+    s.x += s.v * dt;
+  }
+  function kick(s, impulse){ if (!reduce) s.v += impulse; }
+
+  // ---------- Tweens (promise based, advanced by the game loop) ----------
+  const easeInOut = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  const easeOut   = p => 1 - Math.pow(1 - p, 3);
+  const easeIn    = p => p * p * p;
+
+  function tween(dur, fn, ease = easeInOut){
+    return new Promise(res => tweens.push({ t:0, dur: reduce ? 0 : dur, fn, ease, res }));
+  }
+  const wait = s => tween(s, () => {});
+
+  function walkTo(x, y, dur){
+    const x0 = R.x, y0 = R.y;
+    return tween(dur, p => { R.x = x0 + (x - x0) * p; R.y = y0 + (y - y0) * p; });
+  }
 
   // ---------- Sound (Web Audio API, no external files) ----------
   function getCtx(){
@@ -278,29 +200,63 @@
     return audioCtx;
   }
 
+  function unlockAudio(){
+    const ac = getCtx();
+    if (ac && ac.state === 'suspended') ac.resume();
+  }
+
   function tone(freq, start, duration, type='sine', gainPeak=0.18){
     if (!soundOn) return;
-    const ctx = getCtx();
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const ac = getCtx();
+    if (!ac) return;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
     osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
-    gain.gain.setValueAtTime(0, ctx.currentTime + start);
-    gain.gain.linearRampToValueAtTime(gainPeak, ctx.currentTime + start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(ctx.currentTime + start);
-    osc.stop(ctx.currentTime + start + duration + 0.05);
+    osc.frequency.setValueAtTime(freq, ac.currentTime + start);
+    gain.gain.setValueAtTime(0, ac.currentTime + start);
+    gain.gain.linearRampToValueAtTime(gainPeak, ac.currentTime + start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + start + duration);
+    osc.connect(gain).connect(ac.destination);
+    osc.start(ac.currentTime + start);
+    osc.stop(ac.currentTime + start + duration + 0.05);
+  }
+
+  // Like tone(), but the pitch glides from f0 to f1
+  function sweep(f0, f1, start, duration, type='sine', gainPeak=0.12){
+    if (!soundOn) return;
+    const ac = getCtx();
+    if (!ac) return;
+    const t = ac.currentTime + start;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(f0, t);
+    osc.frequency.exponentialRampToValueAtTime(f1, t + duration);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(gainPeak, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.connect(gain).connect(ac.destination);
+    osc.start(t);
+    osc.stop(t + duration + 0.05);
   }
 
   function sfxPickUp(){ tone(340, 0, 0.09, 'triangle', 0.12); }
+  function sfxDrop(){ sweep(220, 90, 0, 0.12, 'sine', 0.16); }
+  function sfxBump(){ tone(260, 0, 0.05, 'triangle', 0.07); }
   function sfxArrive(){
     tone(523.25, 0,   0.12, 'sine', 0.16);
     tone(659.25, 0.09,0.12, 'sine', 0.16);
     tone(783.99, 0.18,0.18, 'sine', 0.18);
   }
   function sfxClick(){ tone(420, 0, 0.06, 'triangle', 0.1); }
+  function sfxDoorOpen(){
+    sweep(190, 340, 0, 0.32, 'triangle', 0.08);
+    sweep(260, 430, 0.06, 0.26, 'sawtooth', 0.02);
+  }
+  function sfxDoorClose(){
+    tone(95, 0, 0.16, 'sine', 0.22);
+    tone(150, 0.01, 0.07, 'triangle', 0.08);
+  }
   function sfxVictory(){
     const notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
     notes.forEach((f,i)=> tone(f, i*0.11, 0.22, 'triangle', 0.15));
@@ -310,160 +266,849 @@
     soundOn = !soundOn;
     soundBtn.textContent = soundOn ? '🔊' : '🔇';
     soundBtn.setAttribute('aria-label', soundOn ? 'Silenciar sonido' : 'Activar sonido');
-    if (soundOn) { const ctx = getCtx(); if (ctx && ctx.state === 'suspended') ctx.resume(); }
+    if (soundOn) unlockAudio();
   });
 
   githubLink.addEventListener('click', sfxClick);
 
-  // ---------- Confetti ----------
-  const CONFETTI_COLORS = ['#ff6b6b','#ffd93d','#6c4bd9','#4fd0f5','#5cb05c','#ff9f43'];
-  function launchConfetti(){
-    const rect = game.getBoundingClientRect();
-    for (let i=0;i<36;i++){
-      const el = document.createElement('div');
-      el.className = 'confetti';
-      const size = 6 + Math.random()*6;
-      el.style.width = size+'px';
-      el.style.height = (size*0.7)+'px';
-      el.style.left = (Math.random()*rect.width)+'px';
-      el.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-      el.style.setProperty('--fallDist', (rect.height*0.6 + Math.random()*rect.height*0.5)+'px');
-      el.style.setProperty('--rot', (Math.random()*720-360)+'deg');
-      el.style.animationDuration = (1.6 + Math.random()*1.2)+'s';
-      el.style.animationDelay = (Math.random()*0.4)+'s';
-      game.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
+  // ---------- Completion counter (localStorage) ----------
+  function loadCount(){
+    try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { return 0; }
+  }
+  function saveCount(){
+    try { localStorage.setItem(KEY, String(count)); } catch (e) { /* private mode: just don't persist */ }
+  }
+  function replay(el, cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+  function showCount(bump){
+    counterNum.textContent = count;
+    counterEl.setAttribute('aria-label', 'Partidas completadas: ' + count);
+    if (bump) replay(counterEl, 'bump');
+  }
+  function setEndCount(n){
+    endCount.textContent = n;
+    endNoun.textContent = n === 1 ? 'vez' : 'veces';
+  }
+
+  // ---------- Layout ----------
+  function layout(){
+    const oldW = W, oldH = H;
+    W = game.clientWidth; H = game.clientHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const hz = H * 0.57;                            // horizon: the sea starts here
+    const hx = W * 0.9 - 180, hy = hz + 4 - 150;    // house box (180x150) standing on its island
+    L = {
+      hz,
+      house: { x:hx, y:hy },
+      door:  { x:hx + 58, y:hy + 82, w:50, h:68 },
+      start: { x:W * 0.08 + 35, y:H * (H >= 850 ? 0.80 : 0.78) },
+      wave:  { x:W * 0.84 - 49, y:H * 0.71 },       // bottom centre
+      palm:  { x:W * 0.04 + 34, y:H * 0.58 },       // trunk base
+    };
+    if (oldW && R.lift){
+      if (done && !R.inside){ R.x = L.door.x - 22; R.y = L.door.y + L.door.h + 8; }
+      else { R.x *= W / oldW; R.y *= H / oldH; clampR(false); }
     }
   }
 
-  // ---------- Drag logic (unified pointer events) ----------
-  function clampToStage(x, y){
-    const g = game.getBoundingClientRect();
-    const w = raisin.offsetWidth, h = raisin.offsetHeight;
-    return {
-      x: Math.max(2, Math.min(g.width - w - 2, x)),
-      y: Math.max(6, Math.min(g.height - h - 4, y))
-    };
+  // Perspective: the raisin shrinks as it walks up the path towards the horizon
+  function scaleAt(y){
+    const t = (L.start.y - y) / (L.start.y - L.hz);
+    return clamp(1 - 0.38 * t, 0.6, 1.08);
   }
 
-  function setRaisinPos(x, y){
-    raisin.style.left = x + 'px';
-    raisin.style.top = y + 'px';
-    raisin.style.bottom = 'auto';
+  // Keeps the raisin inside the stage; bounces off the edges when it slides
+  function clampR(bounce){
+    const s = scaleAt(R.y), hw = 35 * s;
+    const x0 = 2 + hw, x1 = W - 2 - hw, y0 = 6 + 96 * s, y1 = H - 4;
+    let hit = 0;
+    if (R.x < x0){ R.x = x0; if (bounce && R.vx < 0){ hit = -R.vx; R.vx *= -0.45; } }
+    else if (R.x > x1){ R.x = x1; if (bounce && R.vx > 0){ hit = R.vx; R.vx *= -0.45; } }
+    if (R.y < y0){ R.y = y0; if (bounce && R.vy < 0){ hit = Math.max(hit, -R.vy); R.vy *= -0.45; } }
+    else if (R.y > y1){ R.y = y1; if (bounce && R.vy > 0){ hit = Math.max(hit, R.vy); R.vy *= -0.45; } }
+    return hit;
   }
 
   function checkArrival(){
-    const a = raisin.getBoundingClientRect();
-    const d = door.getBoundingClientRect();
-    const cx = a.left + a.width/2, cy = a.top + a.height/2;
-    return (cx > d.left - 18 && cx < d.right + 18 && cy > d.top - 40 && cy < d.bottom + 40);
+    const d = L.door, cx = R.x, cy = R.y - 48 * R.s;
+    return (cx > d.x - 18 && cx < d.x + d.w + 18 && cy > d.y - 40 && cy < d.y + d.h + 40);
+  }
+
+  // ---------- Input (unified pointer events + keyboard) ----------
+  function local(e){
+    const g = cv.getBoundingClientRect();
+    return { x: e.clientX - g.left, y: e.clientY - g.top };
+  }
+
+  function hitRaisin(x, y){
+    const s = R.s, top = R.y - (96 + 12 * R.lift.x) * s - 10;
+    return x > R.x - 35 * s - 12 && x < R.x + 35 * s + 12 && y > top && y < R.y + 12;
   }
 
   function onPointerDown(e){
-    if (done) return;
-    raisin.setPointerCapture?.(e.pointerId);
-    const r = raisin.getBoundingClientRect();
-    const g = game.getBoundingClientRect();
-    offsetX = e.clientX - r.left;
-    offsetY = e.clientY - r.top;
+    if (done || dragging) return;
+    const p = local(e);
+    if (!hitRaisin(p.x, p.y)) return;
+    cv.setPointerCapture?.(e.pointerId);
+    pid = e.pointerId; ptr = p;
+    offsetX = (p.x - R.x) / R.s;
+    offsetY = (p.y - R.y) / R.s;
     dragging = true;
-    raisin.classList.add('lifted');
+    R.vx = R.vy = 0;
+    R.landed = false;
+    kick(R.sq, -2.4);                    // stretch on pick-up
+    cv.style.cursor = 'grabbing';
     sfxPickUp();
-    // resume audio context on first gesture (mobile autoplay policies)
-    const ctx = getCtx(); if (ctx && ctx.state === 'suspended') ctx.resume();
-    // normalize current position to left/top coordinates immediately
-    setRaisinPos(r.left - g.left, r.top - g.top);
+    unlockAudio();                       // mobile autoplay policies
   }
 
   function onPointerMove(e){
-    if (!dragging || done) return;
+    if (!dragging){
+      if (e.pointerType === 'mouse'){
+        const p = local(e);
+        cv.style.cursor = !done && hitRaisin(p.x, p.y) ? 'grab' : '';
+      }
+      return;
+    }
+    if (e.pointerId !== pid) return;
     e.preventDefault();
-    const g = game.getBoundingClientRect();
-    const raw = { x: e.clientX - g.left - offsetX, y: e.clientY - g.top - offsetY };
-    const p = clampToStage(raw.x, raw.y);
-    setRaisinPos(p.x, p.y);
-    raisin.classList.add('walking');
-    if (checkArrival()) arrive();
+    ptr = local(e);
   }
 
-  function onPointerUp(){
-    if (!dragging) return;
+  function followPointer(){
+    R.x = ptr.x - offsetX * R.s;
+    R.y = ptr.y - offsetY * R.s;
+    clampR(false);
+  }
+
+  function onPointerUp(e){
+    if (!dragging || e.pointerId !== pid) return;
+    ptr = local(e);
+    followPointer();       // a quick flick can end before the next frame
     dragging = false;
-    raisin.classList.remove('lifted', 'walking');
+    cv.style.cursor = '';
+    // keep the throw velocity for inertia, capped
+    const sp = Math.hypot(R.vx, R.vy), max = 1000;
+    if (reduce) R.vx = R.vy = 0;
+    else if (sp > max){ R.vx *= max / sp; R.vy *= max / sp; }
   }
 
-  raisin.addEventListener('pointerdown', onPointerDown);
+  cv.addEventListener('pointerdown', onPointerDown);
   window.addEventListener('pointermove', onPointerMove, { passive:false });
   window.addEventListener('pointerup', onPointerUp);
   window.addEventListener('pointercancel', onPointerUp);
 
-  // Keyboard accessibility: arrow keys nudge the raisin toward the door
-  raisin.addEventListener('keydown', (e) => {
-    if (done) return;
-    const STEP = 14;
-    const g = game.getBoundingClientRect();
-    const r = raisin.getBoundingClientRect();
-    let x = r.left - g.left, y = r.top - g.top;
-    let moved = false;
-    if (e.key === 'ArrowRight'){ x += STEP; moved = true; }
-    else if (e.key === 'ArrowLeft'){ x -= STEP; moved = true; }
-    else if (e.key === 'ArrowUp'){ y -= STEP; moved = true; }
-    else if (e.key === 'ArrowDown'){ y += STEP; moved = true; }
-    if (!moved) return;
+  // Keyboard: hold the arrows to walk; a tap nudges the raisin
+  function clearKeys(){ for (const k in keys) delete keys[k]; }
+
+  cv.addEventListener('keydown', (e) => {
+    const d = DIRS[e.key];
+    if (!d) return;
     e.preventDefault();
-    const p = clampToStage(x, y);
-    setRaisinPos(p.x, p.y);
-    raisin.classList.add('walking');
-    clearTimeout(raisin._walkTimer);
-    raisin._walkTimer = setTimeout(()=>raisin.classList.remove('walking'), 220);
-    if (checkArrival()) arrive();
+    focusRing = true;
+    if (done || keys[e.key]) return;
+    keys[e.key] = true;
+    R.vx += d[0] * 90; R.vy += d[1] * 90;
+    unlockAudio();
   });
+  window.addEventListener('keyup', (e) => { delete keys[e.key]; });
+
+  function focusVisible(){
+    try { return cv.matches(':focus-visible'); } catch (e) { return true; }
+  }
+  cv.addEventListener('focus', () => { focusRing = focusVisible(); });
+  cv.addEventListener('blur', () => { focusRing = false; clearKeys(); });
 
   // ---------- Arrival & dialogue flow ----------
+  function say(who, line){
+    nameEl.textContent = who;
+    textEl.textContent = line;
+    if (!reduce){ if (who.startsWith('PASA')) R.talk = 0.7; else Wv.talk = 0.7; }
+    replay(dialogue, 'show');
+  }
+
   function arrive(){
     done = true;
     dragging = false;
-    raisin.classList.remove('walking');
-    raisin.classList.add('success');
-    door.classList.add('glow');
+    clearKeys();
+    R.auto = true; R.vx = R.vy = 0;
+    R.happy = 1;
+    kick(R.sq, 2.5);
+    cv.style.cursor = '';
     hint.style.display = 'none';
     sfxArrive();
     if (navigator.vibrate) navigator.vibrate(40);
 
-    setTimeout(() => {
-      wave.style.display = 'block';
-      wave.classList.add('enter', 'talk');
+    const g = gen, d = L.door;
+    tween(0.3, p => { Door.glow = p; });
+    walkTo(d.x - 22, d.y + d.h + 8, 0.45);     // step aside, next to the door
+    wait(1).then(() => { if (g === gen) R.happy = 0; });
+    wait(0.5).then(() => {
+      if (g !== gen) return;
+      Wv.on = true; Wv.bob = true;
       dialogue.style.display = 'block';
-      dialogue.classList.add('show');
-      nameEl.textContent = 'PASA 🍇';
-      textEl.textContent = '¡Ola, ola!';
-    }, 500);
+      say('PASA 🍇', '¡Ola, ola!');
+      next.focus({ preventScroll:true });
+    });
   }
 
   next.addEventListener('click', () => {
     sfxClick();
     if (step === 0){
       step = 1;
-      nameEl.textContent = 'PASA 🍇';
-      textEl.textContent = '¿Puedo pasar?';
+      say('PASA 🍇', '¿Puedo pasar?');
     } else if (step === 1){
       step = 2;
-      nameEl.textContent = 'OLA 🌊';
-      textEl.textContent = '¡Pasa, pasa!';
+      say('OLA 🌊', '¡Pasa, pasa!');
       next.textContent = '🎉 ¡Entrar!';
-    } else {
-      dialogue.classList.remove('show');
-      dialogue.style.display = 'none';
-      wave.classList.remove('talk');
-      wave.style.transform = 'translateY(5px) scale(1.08)';
-      restart.style.display = 'block';
-      restart.classList.add('show');
-      sfxVictory();
-      launchConfetti();
+    } else if (step === 2){
+      step = 3;
+      finale();
     }
   });
 
-  restart.addEventListener('click', () => location.reload());
+  // Door opens, the raisin walks in, door closes, light on: +1 to the counter
+  async function finale(){
+    const g = gen, d = L.door;
+    dialogue.classList.remove('show');
+    dialogue.style.display = 'none';
+    Wv.bob = false; Wv.hapT = 1;
+
+    sfxDoorOpen();
+    await tween(0.45, p => { Door.open = p; }, easeOut);
+    if (g !== gen) return;
+    await walkTo(d.x + d.w / 2, d.y + d.h, 0.55);
+    if (g !== gen) return;
+    R.inside = true;
+    const y0 = R.y;
+    await tween(0.45, p => { R.y = y0 - 6 * p; R.shrink = 1 - 0.18 * p; R.alpha = 1 - p; }, easeIn);
+    if (g !== gen) return;
+    sfxDoorClose();
+    await tween(0.28, p => { Door.open = 1 - p; }, easeIn);
+    if (g !== gen) return;
+    tween(0.4, p => { Door.light = p; });
+
+    count++;
+    saveCount();
+    showCount(true);
+    sfxVictory();
+    launchConfetti();
+    showEnd(g);
+  }
+
+  function showEnd(g){
+    endSr.textContent = '¡Has dejado pasar a la pasa ' + count + (count === 1 ? ' vez!' : ' veces!');
+    setEndCount(0);
+    endEl.style.display = 'block';
+    replay(endEl, 'show');
+    restart.focus({ preventScroll:true });
+    const n = count;
+    tween(Math.min(0.35 + n * 0.05, 1.2), p => setEndCount(Math.round(n * p)), easeOut)
+      .then(() => { if (g === gen) replay(endCount, 'bump'); });
+  }
+
+  function reset(focus){
+    gen++;
+    tweens = []; confetti = [];
+    done = false; dragging = false; step = 0; ptr = null;
+    clearKeys();
+    Object.assign(R, {
+      x:L.start.x, y:L.start.y, vx:0, vy:0, s:1,
+      lift:spr(0), sq:spr(0), tilt:spr(0), amp:0, phase:0,
+      happy:0, hp:0, talk:0, blink:{ t:2, b:0 },
+      alpha:1, shrink:1, inside:false, auto:false, landed:true,
+    });
+    Object.assign(Wv, { on:false, bob:false, app:spr(0), happy:spr(0), hapT:0, talk:0, blink:{ t:3.1, b:0 } });
+    Object.assign(Door, { open:0, glow:0, light:0 });
+    hint.style.display = '';
+    dialogue.style.display = 'none';
+    dialogue.classList.remove('show');
+    next.textContent = 'Siguiente →';
+    endEl.style.display = 'none';
+    endEl.classList.remove('show');
+    endSr.textContent = '';
+    cv.style.cursor = '';
+    if (focus) cv.focus({ preventScroll:true });
+  }
+
+  restart.addEventListener('click', () => { sfxClick(); reset(true); });
+
+  // ---------- Confetti ----------
+  const CONFETTI_COLORS = ['#ff6b6b','#ffd93d','#6c4bd9','#4fd0f5','#5cb05c','#ff9f43'];
+  function launchConfetti(){
+    if (reduce) return;
+    for (let i=0;i<36;i++){
+      const size = 6 + Math.random()*6;
+      confetti.push({
+        x: Math.random()*W, w: size, h: size*0.7,
+        c: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        fall: H*0.6 + Math.random()*H*0.5,
+        rot: (Math.random()*720 - 360) * DEG,
+        dur: 1.6 + Math.random()*1.2, delay: Math.random()*0.4, t: 0,
+      });
+    }
+  }
+
+  // ---------- Update ----------
+  function blinkStep(b, dt){
+    b.b = Math.max(0, b.b - dt);
+    b.t -= dt;
+    if (b.t <= 0){ b.b = 0.13; b.t = 2.5 + Math.random() * 3; }
+  }
+
+  function update(dt){
+    clock += dt;
+    if (!reduce) T += dt;
+
+    for (const tw of tweens.slice()){
+      tw.t += dt;
+      const p = tw.dur > 0 ? Math.min(tw.t / tw.dur, 1) : 1;
+      tw.fn(tw.ease(p));
+      if (p >= 1){ tweens.splice(tweens.indexOf(tw), 1); tw.res(); }
+    }
+
+    // Raisin movement: follow the pointer, or slide with inertia / keyboard
+    const px = R.x, py = R.y;
+    if (dragging && ptr){
+      followPointer();
+      const a = 1 - Math.exp(-dt * 18);   // smoothed throw velocity
+      R.vx += ((R.x - px) / dt - R.vx) * a;
+      R.vy += ((R.y - py) / dt - R.vy) * a;
+    } else if (!R.auto){
+      let kx = 0, ky = 0;
+      for (const k in keys){ kx += DIRS[k][0]; ky += DIRS[k][1]; }
+      const held = kx || ky;
+      if (held){
+        const n = Math.hypot(kx, ky), a = 1 - Math.exp(-dt * 9);
+        R.vx += (kx / n * KEY_SPEED - R.vx) * a;
+        R.vy += (ky / n * KEY_SPEED - R.vy) * a;
+      } else {
+        const f = Math.exp(-dt * 7);
+        R.vx *= f; R.vy *= f;
+        if (Math.hypot(R.vx, R.vy) < 4) R.vx = R.vy = 0;
+      }
+      R.x += R.vx * dt; R.y += R.vy * dt;
+      const hit = clampR(!held);
+      if (hit > 140 && clock - lastBump > 0.2){
+        lastBump = clock;
+        kick(R.sq, Math.min(hit / 300, 2.5));
+        sfxBump();
+      }
+    }
+    R.s = scaleAt(R.y);
+
+    // Raisin feel: lift, landing squash, stretch with speed, tilt, walk cycle
+    const mvx = (R.x - px) / dt, spd = Math.hypot(mvx, (R.y - py) / dt);
+    spring(R.lift, dragging ? 1 : 0, 240, 15, dt);
+    if (R.lift.x < 0){ R.lift.x = 0; R.lift.v = R.lift.v < -1 ? -R.lift.v * 0.25 : 0; }
+    if (!dragging && !R.landed && R.lift.x <= 0.001){
+      R.landed = true;
+      kick(R.sq, 2.6);
+      sfxDrop();
+    }
+    spring(R.sq, reduce ? 0 : -Math.min(spd / 5000, 0.07), 320, 10, dt);
+    spring(R.tilt, (reduce ? 0 : clamp(mvx * 0.00035, -0.26, 0.26)) - 0.07 * R.lift.x, 150, 12, dt);
+    R.amp += ((reduce ? 0 : Math.min(spd / 200, 1)) - R.amp) * (1 - Math.exp(-dt * 12));
+    R.phase += Math.min(spd * 0.09, 24) * dt;
+    R.hp += (R.happy - R.hp) * (reduce ? 1 : 1 - Math.exp(-dt * 8));
+    R.talk = Math.max(0, R.talk - dt);
+
+    spring(Wv.app, Wv.on ? 1 : 0, 170, 11, dt);
+    spring(Wv.happy, Wv.hapT, 200, 12, dt);
+    Wv.talk = Math.max(0, Wv.talk - dt);
+
+    if (!reduce){ blinkStep(R.blink, dt); blinkStep(Wv.blink, dt); }
+
+    for (const c of confetti) c.t += dt;
+    confetti = confetti.filter(c => c.t < c.delay + c.dur);
+
+    if (!done && checkArrival()) arrive();
+  }
+
+  // ---------- Drawing helpers ----------
+  // Box with elliptical corners like CSS border-radius; r = [tl,tr,br,bl] as [rx,ry]
+  function blob(x, y, w, h, r){
+    const [tl, tr, br, bl] = r;
+    ctx.beginPath();
+    ctx.moveTo(x + tl[0], y);
+    ctx.lineTo(x + w - tr[0], y);
+    ctx.ellipse(x + w - tr[0], y + tr[1], tr[0], tr[1], 0, -Math.PI / 2, 0);
+    ctx.lineTo(x + w, y + h - br[1]);
+    ctx.ellipse(x + w - br[0], y + h - br[1], br[0], br[1], 0, 0, Math.PI / 2);
+    ctx.lineTo(x + bl[0], y + h);
+    ctx.ellipse(x + bl[0], y + h - bl[1], bl[0], bl[1], 0, Math.PI / 2, Math.PI);
+    ctx.lineTo(x, y + tl[1]);
+    ctx.ellipse(x + tl[0], y + tl[1], tl[0], tl[1], 0, Math.PI, Math.PI * 1.5);
+    ctx.closePath();
+  }
+  const rr = (x, y, w, h, r) => blob(x, y, w, h, [[r,r],[r,r],[r,r],[r,r]]);
+
+  // CSS percentage radii, scaled down the same way browsers do when they overlap
+  function cssR(w, h, p){
+    const r = p.map(k => [w * k, h * k]);
+    const f = Math.min(1, w / (r[0][0] + r[1][0]), w / (r[3][0] + r[2][0]), h / (r[0][1] + r[3][1]), h / (r[1][1] + r[2][1]));
+    return r.map(([a, b]) => [a * f, b * f]);
+  }
+  const RAISIN_R = cssR(56, 70, [.47, .52, .45, .48]);
+  const WAVE_R   = cssR(98, 82, [.55, .48, .45, .45]);
+  const SHELL_R  = cssR(14, 10, [.5, .5, .4, .4]);
+  const TOP_R    = r => [[r,r],[r,r],[0,0],[0,0]];
+
+  function ell(x, y, rx, ry, rot = 0){
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, rot, 0, TAU);
+  }
+
+  // Soft elliptical patch fading out at 70%, like radial-gradient(ellipse, c, transparent 70%)
+  function soft(x, y, rx, ry, c0, c1){
+    if (rx <= 0 || ry <= 0) return;
+    ctx.save();
+    ctx.translate(x, y); ctx.scale(rx, ry);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    g.addColorStop(0, c0); g.addColorStop(0.7, c1);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill();
+    ctx.restore();
+  }
+
+  function vgrad(y0, y1, c0, c1){
+    const g = ctx.createLinearGradient(0, y0, 0, y1);
+    g.addColorStop(0, c0); g.addColorStop(1, c1);
+    return g;
+  }
+
+  // Smile, or an open mouth while talking
+  function mouth(x, y, rx, ry, open, col){
+    ctx.strokeStyle = col; ctx.fillStyle = col;
+    ctx.lineWidth = 3; ctx.lineCap = 'round';
+    if (open > 0.05){ ell(x, y + 1, rx * 0.7, 1.5 + 4.5 * open); ctx.fill(); }
+    else { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0.15, Math.PI - 0.15); ctx.stroke(); }
+  }
+
+  function eye(x, y, rx, ry, b, col){
+    ctx.save();
+    ctx.translate(x, y); ctx.scale(1, b > 0 ? 0.12 : 1);
+    ctx.fillStyle = col; ell(0, 0, rx, ry); ctx.fill();
+    if (!b){ ctx.fillStyle = 'rgba(255,255,255,.9)'; ell(-rx * 0.28, -ry * 0.58, rx * 0.28, ry * 0.25); ctx.fill(); }
+    ctx.restore();
+  }
+
+  // ---------- Scenery ----------
+  function drawSky(){
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#dff6ff');
+    g.addColorStop(0.40, C.skyTop);
+    g.addColorStop(0.57, C.skyTop);
+    g.addColorStop(0.57, C.sea1);
+    g.addColorStop(1, C.sea2);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function drawSun(){
+    const k = 1 + 0.05 * (0.5 - 0.5 * Math.cos(T * TAU / 4)), r = 37 * k, x = W - 63, y = 71;
+    const halo = ctx.createRadialGradient(x, y, r * 0.8, x, y, r + 36);
+    halo.addColorStop(0, 'rgba(255,229,130,.6)'); halo.addColorStop(1, 'rgba(255,229,130,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(x, y, r + 36, 0, TAU); ctx.fill();
+    const g = ctx.createRadialGradient(x - 11 * k, y - 15 * k, 0, x - 11 * k, y - 15 * k, 64 * k);
+    g.addColorStop(0, '#fff7d6'); g.addColorStop(0.55, '#ffe47a'); g.addColorStop(1, '#ffce54');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  }
+
+  function cloud(x, y, w, h, puffs){
+    ctx.beginPath();
+    ctx.moveTo(x + h / 2, y);
+    ctx.arc(x + w - h / 2, y + h / 2, h / 2, -Math.PI / 2, Math.PI / 2);
+    ctx.arc(x + h / 2, y + h / 2, h / 2, Math.PI / 2, Math.PI * 1.5);
+    for (const [px, py, d] of puffs){
+      ctx.moveTo(x + px + d, y + py + d / 2);
+      ctx.arc(x + px + d / 2, y + py + d / 2, d / 2, 0, TAU);
+    }
+    ctx.fill();   // one fill: overlapping puffs don't double the alpha
+  }
+
+  function drawClouds(){
+    ctx.save();
+    ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.92;
+    cloud(-120 + (T / 40 % 1) * 640, 85, 105, 32, [[20, -22, 45], [52, -30, 55]]);
+    cloud(-90 + ((T + 20) / 55 % 1) * 640, 150, 85, 27, [[12, -20, 40], [43, -23, 42]]);
+    ctx.restore();
+  }
+
+  function drawBirds(){
+    ctx.save();
+    ctx.strokeStyle = '#3a2a20'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.globalAlpha = 0.75;
+    for (const [y, x0, delay, sc] of [[70, -30, 0, 1], [100, -60, 5, 0.8]]){
+      const x = x0 + (((T - delay) / 14 % 1) + 1) % 1 * 560;
+      const f = Math.sin(T * 9 + delay) * 1.6;   // wing flap
+      ctx.save();
+      ctx.translate(x, y); ctx.scale(sc, sc);
+      ctx.beginPath();
+      ctx.moveTo(0, 4); ctx.quadraticCurveTo(5, -2 + f, 10, 3);
+      ctx.quadraticCurveTo(15, -2 + f, 20, 4);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  function drawFoam(){
+    for (const [fy, alpha, ph] of [[0.565, 0.8, 0], [0.6, 0.4, -1.6]]){
+      const k = 0.5 - 0.5 * Math.cos((T + ph) / 3.2 * TAU);
+      const dx = 14 * k, ry = 7 * (1 + 0.3 * k), y = H * fy + 7;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ell(W / 2 + dx, y, W / 2, ry); ctx.clip();
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      for (let x = dx - 44; x < W + 44; x += 44) ctx.fillRect(x, y - ry, 22, ry * 2);
+      ctx.restore();
+    }
+  }
+
+  function drawSand(){
+    const hz = L.hz, ph = H - hz;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(W * 0.34, hz); ctx.lineTo(W * 0.66, hz); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+    ctx.fillStyle = C.sand; ctx.fill();
+    ctx.strokeStyle = C.sandEdge; ctx.lineWidth = 3; ctx.stroke();
+    ctx.clip();
+    soft(W * 0.2, hz + 0.7 * ph, 90, 14, 'rgba(255,255,255,.35)', 'rgba(255,255,255,0)');
+    soft(W * 0.7, hz + 0.5 * ph, 70, 10, 'rgba(255,255,255,.3)', 'rgba(255,255,255,0)');
+    soft(W * 0.45, hz + 0.88 * ph, 60, 10, 'rgba(217,184,119,.4)', 'rgba(217,184,119,0)');
+    ctx.restore();
+  }
+
+  function shell(x, y, w, h, rot){
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(rot * DEG);
+    ctx.globalAlpha = 0.85; ctx.fillStyle = '#f3c9a3';
+    blob(-w / 2, -h / 2, w, h, w === 14 ? SHELL_R : cssR(w, h, [.5, .5, .4, .4]));
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(196,132,92,.6)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (const k of [-0.25, 0, 0.25]){ ctx.moveTo(k * w * 0.4, h / 2 - 1); ctx.lineTo(k * w, -h / 2 + 2); }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPalm(){
+    const { x, y } = L.palm;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = vgrad(-110, 0, '#8a6238', '#6b4826');
+    ctx.beginPath();
+    ctx.moveTo(-3.6, 0); ctx.quadraticCurveTo(-4.5, -60, -1.8, -110);
+    ctx.lineTo(1.8, -110); ctx.quadraticCurveTo(1.5, -60, 3.6, 0);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.15)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 1; i < 6; i++){ const yy = -i * 18; ctx.moveTo(-3.5, yy); ctx.lineTo(3, yy - 2); }
+    ctx.stroke();
+    [-35, -8, 18, 45, 70].forEach((a, i) => {
+      ctx.save();
+      ctx.translate(0, -107);
+      ctx.rotate((a + Math.sin(T * 1.3 + i) * 3) * DEG);
+      ctx.fillStyle = i % 2 ? '#378239' : '#3f9142';
+      ctx.beginPath();
+      ctx.moveTo(0, -7); ctx.lineTo(23, -7);
+      ctx.ellipse(23, 0, 23, 7, 0, -Math.PI / 2, Math.PI / 2);
+      ctx.lineTo(0, 7); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,.18)';
+      ctx.beginPath(); ctx.moveTo(2, 0); ctx.lineTo(42, 0); ctx.stroke();
+      ctx.restore();
+    });
+    ctx.fillStyle = '#6b4826';
+    ell(-3, -105, 4, 4); ctx.fill();
+    ell(3, -103, 4, 4); ctx.fill();
+    ctx.restore();
+  }
+
+  // ---------- House ----------
+  function drawDoor(dx, dy, dw, dh){
+    const o = Door.open, gl = Door.glow;
+    // doorway: dark inside, warm light once it opens
+    if (o > 0){
+      blob(dx, dy, dw, dh, TOP_R(6));
+      ctx.fillStyle = '#2b170c'; ctx.fill();
+      const g = ctx.createRadialGradient(dx + dw / 2, dy + dh, 2, dx + dw / 2, dy + dh * 0.6, dh * 0.8);
+      g.addColorStop(0, `rgba(255,214,120,${0.85 * o})`); g.addColorStop(1, 'rgba(255,170,80,0)');
+      ctx.fillStyle = g; ctx.fill();
+    }
+    // panel, swinging on its left hinge
+    const ang = o * 1.35, cw = Math.cos(ang), pw = dw * cw, up = 8 * Math.sin(ang);
+    if (pw > 1){
+      ctx.save();
+      if (o === 0){
+        blob(dx + 2, dy + 2, dw - 4, dh - 2, TOP_R(4));
+        if (gl > 0){ ctx.shadowColor = '#ffe47a'; ctx.shadowBlur = 12 * gl; }
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(dx + 2, dy + 4); ctx.lineTo(dx + pw - 2, dy + 2 - up);
+        ctx.lineTo(dx + pw - 2, dy + dh + up * 0.3); ctx.lineTo(dx + 2, dy + dh);
+        ctx.closePath();
+      }
+      ctx.fillStyle = vgrad(dy, dy + dh, '#9c6a50', '#7a4b36'); ctx.fill();
+      ctx.shadowBlur = 0;
+      if (o > 0){ ctx.fillStyle = `rgba(0,0,0,${0.3 * o})`; ctx.fill(); }
+      if (gl > 0){ ctx.fillStyle = `rgba(255,240,190,${0.14 * gl})`; ctx.fill(); }
+      ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = '#69412f'; ctx.stroke();
+      ctx.fillStyle = '#f6d36d'; ctx.shadowColor = '#f6d36d'; ctx.shadowBlur = 4;
+      ell(dx + 35.5 * cw, dy + 41.5, 3.5 * Math.max(cw, 0.3), 3.5); ctx.fill();
+      ctx.restore();
+    }
+    if (o > 0){
+      blob(dx + 2, dy + 2, dw - 4, dh - 2, TOP_R(4));
+      ctx.lineWidth = 4; ctx.strokeStyle = '#69412f'; ctx.stroke();
+    }
+  }
+
+  function drawHouse(){
+    const { x, y } = L.house, gy = L.hz + 4, cx = x + 90;
+
+    // little island the house stands on
+    ctx.fillStyle = 'rgba(255,255,255,.55)'; ell(cx, gy + 2, 124, 15); ctx.fill();
+    ctx.fillStyle = C.sand; ell(cx, gy, 118, 12); ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,.1)'; ell(cx, gy, 92, 6); ctx.fill();
+
+    ctx.save();
+    ctx.translate(x, y);
+
+    // roof + ridge
+    ctx.beginPath(); ctx.moveTo(-15, 90); ctx.lineTo(90, 0); ctx.lineTo(195, 90); ctx.closePath();
+    ctx.fillStyle = vgrad(0, 90, '#d8695a', '#b6473a'); ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.strokeStyle = 'rgba(0,0,0,.08)'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (const yy of [32, 50, 68, 86]){ ctx.moveTo(-15, yy); ctx.lineTo(195, yy); }
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#a3392d';
+    ctx.beginPath(); ctx.moveTo(35, 6); ctx.lineTo(90, -4); ctx.lineTo(145, 6); ctx.closePath(); ctx.fill();
+
+    // wall
+    rr(17, 60, 146, 88, 3);
+    ctx.fillStyle = vgrad(58, 150, '#fff8e0', '#fce9b8'); ctx.fill();
+    ctx.lineWidth = 4; ctx.strokeStyle = '#b85c45'; ctx.stroke();
+
+    // window (lights up at the end)
+    const glass = ctx.createRadialGradient(142, 88, 0, 142, 88, 34);
+    glass.addColorStop(0, '#c8f0fb'); glass.addColorStop(1, '#8dd7ee');
+    ctx.fillStyle = glass; ctx.fillRect(132, 79, 29, 29);
+    if (Door.light > 0){
+      const warm = ctx.createRadialGradient(146.5, 93.5, 2, 146.5, 93.5, 24);
+      warm.addColorStop(0, `rgba(255,236,160,${Door.light})`); warm.addColorStop(1, `rgba(255,196,90,${0.85 * Door.light})`);
+      ctx.fillStyle = warm; ctx.fillRect(132, 79, 29, 29);
+    }
+    ctx.strokeStyle = '#8a5a45';
+    ctx.lineWidth = 4; ctx.strokeRect(130, 77, 33, 33);
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(148, 79); ctx.lineTo(148, 108); ctx.moveTo(132, 95); ctx.lineTo(161, 95); ctx.stroke();
+
+    // lintel + flowers
+    ctx.fillStyle = '#8a5a45'; rr(52, 76, 58, 10, 2); ctx.fill();
+    for (const [fx, col] of [[8, '#e8637a'], [26, '#f6c34a'], [44, '#e8637a']]){
+      ctx.strokeStyle = '#4f9a4f'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(fx, 150); ctx.lineTo(fx, 141); ctx.stroke();
+      ctx.fillStyle = '#fff'; ell(fx, 138, 6, 6); ctx.fill();
+      ctx.fillStyle = col; ell(fx, 138, 4, 4); ctx.fill();
+    }
+
+    drawDoor(58, 82, 50, 68);
+    ctx.restore();
+
+    // light spilling out of the open door
+    if (Door.open > 0){
+      const d = L.door, b = d.y + d.h;
+      ctx.fillStyle = `rgba(255,214,120,${0.28 * Door.open})`;
+      ctx.beginPath();
+      ctx.moveTo(d.x + 4, b); ctx.lineTo(d.x + d.w - 4, b);
+      ctx.lineTo(d.x + d.w + 12, b + 14); ctx.lineTo(d.x - 12, b + 14);
+      ctx.closePath(); ctx.fill();
+    }
+  }
+
+  // ---------- Raisin (player) ----------
+  function limb(px, py, rot, x, y, w, h){
+    ctx.save();
+    ctx.translate(px, py); ctx.rotate(rot);
+    rr(x, y, w, h, Math.min(w, h) / 2); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawRaisin(){
+    const s = R.s * R.shrink, lift = R.lift.x, q = clamp(R.sq.x, -0.22, 0.22);
+    ctx.save();
+    ctx.globalAlpha = R.alpha;
+    if (R.inside){
+      const d = L.door;
+      ctx.beginPath(); ctx.rect(d.x + 4, d.y + 4, d.w - 8, d.h - 4); ctx.clip();
+    } else {
+      // the shadow stays on the ground while the raisin is lifted
+      soft(R.x, R.y - 4 * s, 26 * s * (1 - 0.35 * lift), 6 * s, `rgba(0,0,0,${0.32 - 0.16 * lift})`, 'rgba(0,0,0,0)');
+    }
+
+    const ls = 1 + 0.12 * lift;
+    ctx.translate(R.x, R.y - 12 * lift * s);
+    ctx.scale(s * ls * (1 + q), s * ls * (1 - q));           // squash & stretch from the feet
+    ctx.translate(0, -48); ctx.rotate(R.tilt.x); ctx.translate(0, 48);
+
+    // leaf, behind the body
+    ctx.save();
+    ctx.translate(-6, -78); ctx.rotate((-14 + 6 * Math.sin(T * TAU / 2.6)) * DEG);
+    ctx.fillStyle = vgrad(-12, 0, '#5cb05c', '#3f8a3f');
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(0, -12, 25, -12); ctx.quadraticCurveTo(25, 0, 0, 0); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(3, -2); ctx.lineTo(21, -10); ctx.stroke();
+    ctx.restore();
+
+    // body: shading, raisin wrinkles, highlight
+    blob(-28, -86, 56, 70, RAISIN_R);
+    const g = ctx.createRadialGradient(-8.4, -68.5, 0, -8.4, -68.5, 64);
+    g.addColorStop(0, '#9a5726'); g.addColorStop(0.62, '#5a260f'); g.addColorStop(1, '#38170a');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save();
+    ctx.clip();
+    const rim = ctx.createRadialGradient(-6, -58, 22, -6, -58, 46);
+    rim.addColorStop(0, 'rgba(0,0,0,0)'); rim.addColorStop(1, 'rgba(0,0,0,.35)');
+    ctx.fillStyle = rim; ctx.fillRect(-30, -88, 60, 74);
+    ctx.strokeStyle = 'rgba(25,8,2,.35)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-20, -30); ctx.quadraticCurveTo(-12, -24, -4, -27);
+    ctx.moveTo(6, -24); ctx.quadraticCurveTo(14, -27, 19, -34);
+    ctx.moveTo(-4, -79); ctx.quadraticCurveTo(4, -76, 12, -79);
+    ctx.moveTo(-23, -68); ctx.quadraticCurveTo(-20, -62, -22, -55);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,210,170,.25)'; ell(-12, -72, 7, 4, -0.5); ctx.fill();
+    ctx.restore();
+    blob(-28, -86, 56, 70, RAISIN_R);
+    ctx.lineWidth = 3; ctx.strokeStyle = C.ink; ctx.stroke();
+
+    // face
+    eye(-7.5, -56, 4.5, 6, R.blink.b, '#17100d');
+    eye(8.5, -56, 4.5, 6, R.blink.b, '#17100d');
+    ctx.fillStyle = 'rgba(201,105,74,.55)';
+    ell(-16.5, -49.5, 3.5, 2.5); ctx.fill();
+    ell(16.5, -49.5, 3.5, 2.5); ctx.fill();
+    mouth(0, -41, 9, 5 + 1.5 * R.hp, R.talk > 0 ? Math.abs(Math.sin(R.talk * 16)) : 0, '#1b0e08');
+
+    // arms swing while walking and go up when happy; legs step
+    ctx.fillStyle = '#3b2115';
+    const up = 47 * R.hp, wig = 10 * R.hp * Math.sin(T * 12);
+    const aL = 18 + 20 * R.amp * (0.5 - 0.5 * Math.cos(R.phase)) + up + wig;
+    const aR = 18 + 20 * R.amp * (0.5 + 0.5 * Math.cos(R.phase)) + up - wig;
+    limb(-25, -45.5, aL * DEG, -18, -2.5, 18, 5);
+    limb(25, -45.5, -aR * DEG, 0, -2.5, 18, 5);
+    const la = 0.38 * R.amp * Math.sin(R.phase);
+    limb(-10.5, -17, la, -2.5, 0, 5, 13);
+    limb(11.5, -17, -la, -2.5, 0, 5, 13);
+
+    if (focusRing && !done){
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+      ell(0, -51, 37, 44); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // ---------- Wave (NPC) ----------
+  function drawWave(){
+    const a = Wv.app.x;
+    if (a < 0.01) return;
+    const { x, y } = L.wave, hp = Wv.happy.x;
+    const bob = Wv.bob ? -6 * (0.5 - 0.5 * Math.cos(T * TAU / 0.6)) : 0;
+    const sc = (0.6 + 0.4 * a) * (1 + 0.08 * hp);
+    ctx.save();
+    ctx.globalAlpha = clamp(a * 1.6, 0, 1);
+    ctx.translate(x, y + 40 * (1 - a) + 5 * hp);
+    ctx.scale(sc, sc);
+
+    // splash where it meets the sea
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ell(0, -2, 50, 7); ctx.fill();
+
+    ctx.translate(0, bob);
+    blob(-49, -82, 98, 82, WAVE_R);
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,.18)'; ctx.shadowOffsetY = 7; ctx.shadowBlur = 5;
+    ctx.fillStyle = vgrad(-82, 0, '#4fd0f5', '#1c86ba'); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = '#fff'; ell(-1.5, -72, 52.5, 14, -4 * DEG); ctx.fill();
+    const shade = ctx.createRadialGradient(-6, -46, 26, -6, -46, 60);
+    shade.addColorStop(0, 'rgba(0,0,0,0)'); shade.addColorStop(1, 'rgba(0,0,0,.2)');
+    ctx.fillStyle = shade; ctx.fillRect(-50, -84, 100, 86);
+    ctx.restore();
+    blob(-49, -82, 98, 82, WAVE_R);
+    ctx.lineWidth = 4; ctx.strokeStyle = '#166c9c'; ctx.stroke();
+
+    // face: happy ^ ^ eyes once the raisin goes in
+    if (hp > 0.5){
+      ctx.strokeStyle = '#123b53'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(-17, -37, 4.5, Math.PI * 1.1, Math.PI * 1.9);
+      ctx.moveTo(18 + 4.5 * Math.cos(Math.PI * 1.1), -37 + 4.5 * Math.sin(Math.PI * 1.1));
+      ctx.arc(18, -37, 4.5, Math.PI * 1.1, Math.PI * 1.9);
+      ctx.stroke();
+    } else {
+      eye(-17, -40, 4, 6, Wv.blink.b, '#123b53');
+      eye(18, -40, 4, 6, Wv.blink.b, '#123b53');
+    }
+    ctx.fillStyle = 'rgba(13,90,125,.5)';
+    ell(-25.5, -35.5, 3.5, 2.5); ctx.fill();
+    ell(25.5, -35.5, 3.5, 2.5); ctx.fill();
+    mouth(-1, -27, 9, 5 + 2 * hp, Wv.talk > 0 ? Math.abs(Math.sin(Wv.talk * 16)) : 0, '#123b53');
+    ctx.restore();
+  }
+
+  function drawConfetti(){
+    for (const c of confetti){
+      const k = (c.t - c.delay) / c.dur;
+      if (k < 0) continue;
+      ctx.save();
+      ctx.globalAlpha = 1 - k;
+      ctx.translate(c.x + c.w / 2, -12 + c.fall * k);
+      ctx.rotate(c.rot * k);
+      ctx.fillStyle = c.c;
+      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.restore();
+    }
+  }
+
+  function render(){
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawSky();
+    drawSun();
+    drawClouds();
+    drawBirds();
+    drawFoam();
+    drawSand();
+    shell(W * 0.12 + 7, H * 0.92 - 5, 14, 10, -15);
+    shell(W * 0.6 + 5, H * 0.95 - 4, 10, 8, 20);
+    drawPalm();
+    drawHouse();
+    // depth: whoever is lower on screen is closer to the viewer
+    if (R.y > L.wave.y){ drawWave(); drawRaisin(); }
+    else { drawRaisin(); drawWave(); }
+    drawConfetti();
+  }
+
+  // ---------- Game loop ----------
+  let last = performance.now();
+  function frame(now){
+    const dt = Math.min(Math.max((now - last) / 1000, 0.0001), 1 / 30);
+    last = now;
+    update(dt);
+    render();
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', layout);
+  layout();
+  reset(false);
+  showCount(false);
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
